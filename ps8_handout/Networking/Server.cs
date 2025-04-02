@@ -30,6 +30,7 @@ public static class Server
     {
         TcpListener listener = new TcpListener(IPAddress.Any, port);
         listener.Start();
+        TcpClient c = listener.AcceptTcpClient();
         while (true)
         {
             TcpClient client = listener.AcceptTcpClient();
@@ -41,8 +42,7 @@ public static class Server
             {
                 clients.Add(w);
             }
-            NetworkConnection networkConnection = new NetworkConnection(client);
-            new Thread(() => handleConnect(networkConnection)).Start();
+            Console.WriteLine("accepted a connection");
         }
     }
 }

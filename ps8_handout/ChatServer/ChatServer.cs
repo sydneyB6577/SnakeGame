@@ -3,8 +3,6 @@
 // </copyright>
 
 using CS3500.Networking;
-using System.Data;
-using System.Net.Sockets;
 using System.Text;
 
 namespace CS3500.Chatting;
@@ -14,9 +12,7 @@ namespace CS3500.Chatting;
 /// </summary>
 public partial class ChatServer
 {
-    static List<NetworkConnection> connectionList = new List<NetworkConnection>();
-    static Dictionary<NetworkConnection, string> userNames = new Dictionary<NetworkConnection, string>();
-    static int sendCount;
+
     /// <summary>
     ///   The main program.
     /// </summary>
@@ -28,6 +24,7 @@ public partial class ChatServer
         Console.Read(); // don't stop the program.
     }
 
+
     /// <summary>
     ///   <pre>
     ///     When a new connection is established, enter a loop that receives from and
@@ -37,54 +34,19 @@ public partial class ChatServer
     ///
     private static void HandleConnect( NetworkConnection connection )
     {
-
-        // make a list of all the connected sockets.
-
-        if (!connectionList.Contains(connection))
-        {
-            connectionList.Add(connection);
-            sendCount = 0;
-        }
-
-        // LISTEN
-
-        StreamReader r = new StreamReader(connection.GetClient().GetStream(), Encoding.UTF8);
-
-        // Send a message to all of the connected sockets.
-
         // handle all messages until disconnect.
-
         try
         {
             while ( true )
             {
-                var message = r.ReadLine( );
+                var message = connection.ReadLine( );
 
-
-                foreach (NetworkConnection socket in connectionList)
-                {
-                    if (!userNames.ContainsKey(socket))
-                    {
-                        userNames.Add(socket, message);
-                    }
-                    else
-                    {
-                        string name;
-                        userNames.TryGetValue(socket, out name);
-                        socket.Send(name + ": " + message);
-                    }
-                }            
+                connection.Send( "thanks!" );
             }
         }
         catch ( Exception )
         {
-            foreach ( NetworkConnection socket in connectionList )
-            {
-                if (!socket.IsConnected)
-                {
-                    connectionList.Remove(socket);
-                }
-            }
+            // do anything necessary to handle a disconnected client in here
         }
     }
 }

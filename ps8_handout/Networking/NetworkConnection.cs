@@ -40,8 +40,6 @@ public sealed class NetworkConnection : IDisposable
     /// </summary>
     private StreamWriter? _writer = null;
 
-    //public List<NetworkConnection> connectionList = new List<NetworkConnection>();
-
     /// <summary>
     ///   Initializes a new instance of the <see cref="NetworkConnection"/> class.
     ///   <para>
@@ -53,7 +51,6 @@ public sealed class NetworkConnection : IDisposable
     /// </param>
     public NetworkConnection( TcpClient tcpClient )
     {
-        _tcpClient = tcpClient;
         if ( IsConnected )
         {
             // Only establish the reader/writer if the provided TcpClient is already connected.
@@ -88,17 +85,21 @@ public sealed class NetworkConnection : IDisposable
     /// <param name="port"> The port, e.g., 11000. </param>
     public void Connect( string host, int port )
     {
-        try
+        //try
+        //{
+        //    _tcpClient = new TcpClient();
+        //    _tcpClient.Connect(host, port);
+        //    _reader = new StreamReader(_tcpClient.GetStream(), Encoding.UTF8);
+        //    _writer = new StreamWriter(_tcpClient.GetStream(), Encoding.UTF8) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
+        //}
+        //catch (Exception e)
+        //{
+        //    throw new SocketException();
+        //}
+
+        if (IsConnected) 
         {
-            _tcpClient = new TcpClient();
-            _tcpClient.Connect(host, port);
-            _reader = new StreamReader(_tcpClient.GetStream(), Encoding.UTF8);
-            _writer = new StreamWriter(_tcpClient.GetStream(), Encoding.UTF8) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
-            //connectionList.Add(NetworkConnection(_tcpClient));
-        }
-        catch (Exception e)
-        {
-            throw new SocketException();
+            TcpClient tcpClient = new TcpClient( host, port );
         }
     }
 
@@ -164,14 +165,5 @@ public sealed class NetworkConnection : IDisposable
     public void Dispose( )
     {
         Disconnect();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public TcpClient GetClient ()
-    {
-        return this._tcpClient;
     }
 }
