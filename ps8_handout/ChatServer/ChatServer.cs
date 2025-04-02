@@ -69,6 +69,8 @@ public partial class ChatServer
                 {
                     socket.Send(name + ": " + message);
                 }
+
+                // here is a change
                 
             }
         }
