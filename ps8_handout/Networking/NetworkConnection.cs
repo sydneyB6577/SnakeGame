@@ -2,16 +2,14 @@
 // Copyright (c) 2024 UofU-CS3500. All rights reserved.
 // </copyright>
 
-/*
- * NetworkConnection
- * 
- * The purpose of this file is to create instances of the TcpClient,
- * establish it's reader and writer, and hold various methods to read
- * and write lines between clients.
- * 
- * Authors: Sydney Burt, Levi Hammond
- * Date: 3-22-2025
- */
+// NetworkConnection
+//
+// The purpose of this file is to create instances of the TcpClient,
+// establish it's reader and writer, and hold various methods to read
+// and write lines between clients.
+// 
+// Authors: Sydney Burt, Levi Hammond
+// Date: 3-28-2025
 
 using System.Net.Http;
 using System.Net;
@@ -49,13 +47,14 @@ public sealed class NetworkConnection : IDisposable
     /// <param name="tcpClient">
     ///   An already existing TcpClient
     /// </param>
-    public NetworkConnection( TcpClient tcpClient )
+    public NetworkConnection(TcpClient tcpClient)
     {
-        if ( IsConnected )
+        _tcpClient = tcpClient;
+        if (IsConnected)
         {
             // Only establish the reader/writer if the provided TcpClient is already connected.
-            _reader = new StreamReader( _tcpClient.GetStream(), Encoding.UTF8 );
-            _writer = new StreamWriter( _tcpClient.GetStream(), Encoding.UTF8 ) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
+            _reader = new StreamReader(_tcpClient.GetStream(), Encoding.UTF8);
+            _writer = new StreamWriter(_tcpClient.GetStream(), Encoding.UTF8) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
         }
     }
 
@@ -65,8 +64,8 @@ public sealed class NetworkConnection : IDisposable
     ///     Create a network connection object.  The tcpClient will be unconnected at the start.
     ///   </para>
     /// </summary>
-    public NetworkConnection( )
-        : this( new TcpClient( ) )
+    public NetworkConnection()
+        : this(new TcpClient())
     {
     }
 
@@ -83,23 +82,18 @@ public sealed class NetworkConnection : IDisposable
     /// </summary>
     /// <param name="host"> The URL or IP address, e.g., www.cs.utah.edu, or  127.0.0.1. </param>
     /// <param name="port"> The port, e.g., 11000. </param>
-    public void Connect( string host, int port )
+    public void Connect(string host, int port)
     {
-        //try
-        //{
-        //    _tcpClient = new TcpClient();
-        //    _tcpClient.Connect(host, port);
-        //    _reader = new StreamReader(_tcpClient.GetStream(), Encoding.UTF8);
-        //    _writer = new StreamWriter(_tcpClient.GetStream(), Encoding.UTF8) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
-        //}
-        //catch (Exception e)
-        //{
-        //    throw new SocketException();
-        //}
-
-        if (IsConnected) 
+        try
         {
-            TcpClient tcpClient = new TcpClient( host, port );
+            _tcpClient = new TcpClient();
+            _tcpClient.Connect(host, port);
+            _reader = new StreamReader(_tcpClient.GetStream(), Encoding.UTF8);
+            _writer = new StreamWriter(_tcpClient.GetStream(), Encoding.UTF8) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
+        }
+        catch (Exception)
+        {
+            throw new SocketException();
         }
     }
 
@@ -112,7 +106,7 @@ public sealed class NetworkConnection : IDisposable
     ///   connected), throw an InvalidOperationException.
     /// </summary>
     /// <param name="message"> The string of characters to send. </param>
-    public void Send( string message )
+    public void Send(string message)
     {
         if (IsConnected == false) // Throws an exception if the socket is not connected yet.
         {
@@ -122,9 +116,11 @@ public sealed class NetworkConnection : IDisposable
         {
             throw new InvalidOperationException();
         }
-        _writer!.WriteLineAsync(message); // Sends a message with a new line at the end through the writer.
+        else if (message != null)
+        {
+            _writer!.WriteLineAsync(message); // Sends a message with a new line at the end through the writer.
+        }
     }
-
 
     /// <summary>
     ///   Read a message from the remote side of the connection.  The message will contain
@@ -133,9 +129,8 @@ public sealed class NetworkConnection : IDisposable
     ///   connected), throw an InvalidOperationException.
     /// </summary>
     /// <returns> The contents of the message. </returns>
-    public string ReadLine( )
+    public string ReadLine()
     {
-        // TODO: implement this
         if (IsConnected == false) // Throws an exception if the socket is not connected yet.
         {
             throw new InvalidOperationException();
@@ -144,7 +139,7 @@ public sealed class NetworkConnection : IDisposable
         {
             throw new InvalidOperationException();
         }
-        return _reader!.ReadLine()!; // Reads the message from the other side of the connection.
+        return _reader.ReadLine() ?? throw new Exception(); // Reads the message from the other side of the connection.
     }
 
     /// <summary>
@@ -162,8 +157,17 @@ public sealed class NetworkConnection : IDisposable
     /// <summary>
     ///   Automatically called with a using statement (see IDisposable)
     /// </summary>
-    public void Dispose( )
+    public void Dispose()
     {
         Disconnect();
+    }
+
+    /// <summary>
+    ///   Returns the TcpClient as a part of the given network connection.
+    /// </summary>
+    /// <returns> The given TcpClient. </returns>
+    public TcpClient GetClient()
+    {
+        return this._tcpClient;
     }
 }
