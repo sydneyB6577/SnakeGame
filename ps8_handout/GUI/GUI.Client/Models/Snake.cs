@@ -1,5 +1,11 @@
 ﻿namespace GUI.Client.Models
 {
+    /*
+     * This class keeps track of the snake object the player uses to interact with the game world.
+     * 
+     * Authors: Sydney Burt, Levi Hammond.
+     * Date: 4-2-25
+     */
     public class Snake
     {
         private int _id;
