@@ -8,5 +8,8 @@
      */
     public class ObstacleWall
     {
+        private int _wallID;
+        private Point2D endPointOne;
+        private Point2D endPointTwo;
     }
 }
