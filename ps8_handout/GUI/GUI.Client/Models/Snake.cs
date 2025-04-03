@@ -16,6 +16,11 @@
         private bool gameState;
         private bool serverState;
 
+        public Snake()
+        {
+
+        }
+
         public Snake(int iD, string name, List<Point2D> positionList, Point2D direction)
         {
             this._snakeID = iD;

@@ -12,6 +12,10 @@
         private Point2D _spawnPoint;
         private bool gameState;
 
+        public Powerup()
+        {
+
+        }
         public Powerup(int id, Point2D point)
         {
             _powerID = id;

@@ -7,6 +7,11 @@
         private int worldLeftDimention;
         private int worldRightDimention;
 
+        public World()
+        {
+
+        }
+
         public World(int x, int y)
         {
             this.worldTopDimention = x;
