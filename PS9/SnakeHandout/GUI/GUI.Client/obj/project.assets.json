@@ -1739,11 +1739,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\erin_\\Desktop\\PS9 Assignment Code\\SnakeHandout\\GUI\\GUI.Client\\GUI.Client.csproj",
+      "projectUniqueName": "C:\\Users\\erin_\\source\\repos\\uofu-cs3500-spring25-20\\game-team_1-000-000\\PS9\\SnakeHandout\\GUI\\GUI.Client\\GUI.Client.csproj",
       "projectName": "GUI.Client",
-      "projectPath": "C:\\Users\\erin_\\Desktop\\PS9 Assignment Code\\SnakeHandout\\GUI\\GUI.Client\\GUI.Client.csproj",
+      "projectPath": "C:\\Users\\erin_\\source\\repos\\uofu-cs3500-spring25-20\\game-team_1-000-000\\PS9\\SnakeHandout\\GUI\\GUI.Client\\GUI.Client.csproj",
       "packagesPath": "C:\\Users\\erin_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\erin_\\Desktop\\PS9 Assignment Code\\SnakeHandout\\GUI\\GUI.Client\\obj\\",
+      "outputPath": "C:\\Users\\erin_\\source\\repos\\uofu-cs3500-spring25-20\\game-team_1-000-000\\PS9\\SnakeHandout\\GUI\\GUI.Client\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

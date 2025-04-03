@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ilr4MGf0psA=",
+  "dgSpecHash": "KFAnhY/toBU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\erin_\\Desktop\\PS9 Assignment Code\\SnakeHandout\\GUI\\GUI\\GUI.csproj",
+  "projectFilePath": "C:\\Users\\erin_\\source\\repos\\uofu-cs3500-spring25-20\\game-team_1-000-000\\PS9\\SnakeHandout\\GUI\\GUI\\GUI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\erin_\\.nuget\\packages\\blazor.extensions.canvas\\1.1.1\\blazor.extensions.canvas.1.1.1.nupkg.sha512",
     "C:\\Users\\erin_\\.nuget\\packages\\microsoft.aspnetcore.authorization\\8.0.10\\microsoft.aspnetcore.authorization.8.0.10.nupkg.sha512",
