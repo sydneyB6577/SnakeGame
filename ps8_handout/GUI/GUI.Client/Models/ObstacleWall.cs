@@ -11,5 +11,12 @@
         private int _wallID;
         private Point2D endPointOne;
         private Point2D endPointTwo;
+
+        public ObstacleWall(int id, Point2D endPointOne, Point2D endPointTwo)
+        {
+            this._wallID = id;
+            this.endPointOne = endPointOne;
+            this.endPointTwo = endPointTwo;
+        }
     }
 }

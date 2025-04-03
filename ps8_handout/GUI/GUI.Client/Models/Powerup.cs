@@ -12,9 +12,16 @@
         private Point2D _spawnPoint;
         private bool gameState;
 
-        public Powerup(Point2D point)
+        public Powerup(int id, Point2D point)
         {
+            _powerID = id;
             this._spawnPoint = point;
+            this.gameState = true;
+        }
+
+        public void consumePowerup()
+        {
+            this.gameState = false;
         }
     }
 }
