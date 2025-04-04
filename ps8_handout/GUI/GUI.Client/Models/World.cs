@@ -2,22 +2,22 @@
 {
     public class World
     {
-        private int worldTopDimention;
-        private int worldBottomDimention;
-        private int worldLeftDimention;
-        private int worldRightDimention;
+        public int worldTopDimention { get; set; }
+        public int worldBottomDimention { get; set; }
+        public int worldLeftDimention { get; set; }
+        public int worldRightDimention { get; set; }
 
         public World()
         {
 
         }
 
-        public World(int x, int y)
-        {
-            this.worldTopDimention = x;
-            this.worldBottomDimention = -x;
-            this.worldLeftDimention = -y;
-            this.worldRightDimention = y;
-        }
+        //public World(int x, int y)
+        //{
+        //    this.worldTopDimention = x;
+        //    this.worldBottomDimention = -x;
+        //    this.worldLeftDimention = -y;
+        //    this.worldRightDimention = y;
+        //}
     }
 }

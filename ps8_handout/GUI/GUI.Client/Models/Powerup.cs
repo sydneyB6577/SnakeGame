@@ -8,24 +8,24 @@
      */
     public class Powerup
     {
-        private int _powerID;
-        private Point2D _spawnPoint;
-        private bool gameState;
+        public int _powerID { get; set; }
+        public Point2D _spawnPoint { get; set; }
+        public bool gameState { get; set; }
 
         public Powerup()
         {
 
         }
-        public Powerup(int id, Point2D point)
-        {
-            _powerID = id;
-            this._spawnPoint = point;
-            this.gameState = true;
-        }
+        //public Powerup(int id, Point2D point)
+        //{
+        //    _powerID = id;
+        //    this._spawnPoint = point;
+        //    this.gameState = true;
+        //}
 
-        public void consumePowerup()
-        {
-            this.gameState = false;
-        }
+        //public void consumePowerup()
+        //{
+        //    this.gameState = false;
+        //}
     }
 }

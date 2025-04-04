@@ -8,19 +8,19 @@
      */
     public class ObstacleWall
     {
-        private int _wallID;
-        private Point2D endPointOne;
-        private Point2D endPointTwo;
+        public int _wallID { get; set; }
+        public Point2D endPointOne { get; set; }
+        public Point2D endPointTwo { get; set; }
 
         public ObstacleWall()
         {
 
         }
-        public ObstacleWall(int id, Point2D endPointOne, Point2D endPointTwo)
-        {
-            this._wallID = id;
-            this.endPointOne = endPointOne;
-            this.endPointTwo = endPointTwo;
-        }
+        //public ObstacleWall(int id, Point2D endPointOne, Point2D endPointTwo)
+        //{
+        //    this._wallID = id;
+        //    this.endPointOne = endPointOne;
+        //    this.endPointTwo = endPointTwo;
+        //}
     }
 }
