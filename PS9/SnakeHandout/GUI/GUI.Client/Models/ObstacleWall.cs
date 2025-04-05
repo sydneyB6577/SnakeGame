@@ -1,6 +1,6 @@
 ﻿namespace GUI.Client.Models
 {
-    public class Wall
+    public class ObstacleWall
     {
     }
 }
