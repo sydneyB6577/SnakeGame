@@ -8,18 +8,51 @@
      */
     public class Snake
     {
-        public Snake()
-        {
-
-        }
+        /// <summary>
+        ///     The ID of this snake object
+        /// </summary>
         public int _snakeID { get; set; }
+
+        /// <summary>
+        ///     The input name for this snake object   
+        /// </summary>
         public string _name { get; set; }
+
+        /// <summary>
+        ///     The list of objects to draw for this snake object's representation
+        /// </summary>
         public List<Point2D> _body { get; set; }
+
+        /// <summary>
+        ///     The direction this snake object is traveling
+        /// </summary>
         public Point2D _direction { get; set; }
+
+        /// <summary>
+        ///     The score this snake object has scored during the game.
+        /// </summary>
         public int _score { get; set; }
+
+        /// <summary>
+        ///     The status of this snake object being dead or alive
+        /// </summary>
         public bool gameState { get; set; }
+
+        /// <summary>
+        ///     The status of this snake object being connected or disconnected
+        /// </summary>
         public bool serverState { get; set; }
 
+        public Snake()
+        {
+            this._snakeID = 0;
+            this._name = string.Empty;
+            this._body = new List<Point2D>();
+            this._direction = new Point2D();
+            this._score = 0;
+            gameState = true;
+            serverState = true;
+        }
         //public Snake(int iD, string name, List<Point2D> positionList, Point2D direction)
         //{
         //    this._snakeID = iD;
