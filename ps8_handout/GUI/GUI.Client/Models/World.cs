@@ -2,6 +2,10 @@
 {
     public class World
     {
+        public List<Snake> snakes = new List<Snake>();
+        public List<ObstacleWall> walls = new List<ObstacleWall>();
+        public List<Powerup> powerups = new List<Powerup>();
+
         /// <summary>
         ///     The upper side of this world object to draw the gameplay area
         /// </summary>
