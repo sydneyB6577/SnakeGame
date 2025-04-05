@@ -8,9 +8,7 @@
      */
     public class Powerup
     {
-        private int _powerID;
         private Point2D _spawnPoint;
-        private bool gameState;
 
         public Powerup(Point2D point)
         {

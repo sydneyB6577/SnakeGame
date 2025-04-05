@@ -8,7 +8,7 @@
      */
     public class Snake
     {
-        private int _snakeID;
+        private int _id;
         private string _name;
         private List<Point2D> _body;
         private Point2D _direction;
