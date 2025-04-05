@@ -6,6 +6,7 @@
 @using System.Numerics
 @using System.Diagnostics
 @using System.Text.Json
+@using GUI.Client.Controllers;
 @inject IJSRuntime JsRuntime;
 
 <PageTitle> Snake </PageTitle>
@@ -19,8 +20,6 @@
     private BECanvasComponent canvasReference = null!;
     private Canvas2DContext context = null!;
     private IJSObjectReference jsModule = null!;
-
-
 
     protected override async Task OnAfterRenderAsync( bool firstRender )
     {
@@ -39,13 +38,31 @@
         }
     }
 
+    //Draws a new snake when a new user connects. 
 
 
     [JSInvokable]
     public void HandleKeyPress( string key )
     {
+        key = key.ToLower();
         // TODO: Once the client is connected and the handshake is complete,
         //       invoke some controller method to send the appropriate command to the server
+        if (key.Equals("w"))
+        {
+            NetworkController.moveUP(players[]);
+        }
+        else if (key.Equals("a"))
+        {
+            NetworkController.moveDOWN();
+        }
+        else if (key.Equals("s"))
+        {
+            NetworkController.moveLEFT();
+        }
+        else if (key.Equals("d"))
+        {
+            NetworkController.moveRIGHT();
+        }
 
 
         // TODO: Remove this, which is just here to show you what the 'key' string is for whatever key you pressed
