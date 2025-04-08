@@ -11,47 +11,59 @@
         /// <summary>
         ///     The ID of this snake object
         /// </summary>
-        public int _snakeID { get; set; }
+        public int snake { get; set; }
 
         /// <summary>
         ///     The input name for this snake object   
         /// </summary>
-        public string _name { get; set; }
+        public string name { get; set; }
 
         /// <summary>
         ///     The list of objects to draw for this snake object's representation
         /// </summary>
-        public List<Point2D> _body { get; set; }
+        public List<Point2D> body { get; set; }
 
         /// <summary>
         ///     The direction this snake object is traveling
         /// </summary>
-        public Point2D _direction { get; set; }
+        public Point2D dir { get; set; }
 
         /// <summary>
         ///     The score this snake object has scored during the game.
         /// </summary>
-        public int _score { get; set; }
+        public int score { get; set; }
 
         /// <summary>
         ///     The status of this snake object being dead or alive
         /// </summary>
-        public bool gameState { get; set; }
+        public bool died { get; set; }
+
+        /// <summary>
+        ///     The status of this snake object being dead or alive
+        /// </summary>
+        public bool alive { get; set; }
 
         /// <summary>
         ///     The status of this snake object being connected or disconnected
         /// </summary>
-        public bool serverState { get; set; }
+        public bool dc { get; set; }
+
+        /// <summary>
+        ///     The status of this snake object being connected or disconnected
+        /// </summary>
+        public bool join { get; set; }
 
         public Snake()
         {
-            this._snakeID = 0;
-            this._name = string.Empty;
-            this._body = new List<Point2D>();
-            this._direction = new Point2D();
-            this._score = 0;
-            gameState = true;
-            serverState = true;
+            this.snake = 0;
+            this.name = string.Empty;
+            this.body = new List<Point2D>();
+            this.dir = new Point2D();
+            this.score = 0;
+            this.died = false;
+            this.alive = true;
+            this.dc = false;
+            this.join = true;
         }
         //public Snake(int iD, string name, List<Point2D> positionList, Point2D direction)
         //{
