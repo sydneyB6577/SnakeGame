@@ -83,6 +83,9 @@
         /// 
         /// </summary>
         /// <param name="connection"></param>
+        /// THIS IS NOT ENOUGH. the message we're receiving is line by line and each line is an object
+        /// need to check if line is wall, snake, or world, then act appripriately (update the entire world). 
+        /// Don't deserialize the entire world.
         public static void HandleConnect(NetworkConnection connection)
         {
             //Only adds the connection to the list if it is a new connection
