@@ -28,7 +28,10 @@
 
         public World()
         {
-
+            this.worldTopDimention = 0;
+            this.worldBottomDimention = 0;
+            this.worldLeftDimention = 0;
+            this.worldRightDimention = 0;
         }
 
         //public World(int x, int y)

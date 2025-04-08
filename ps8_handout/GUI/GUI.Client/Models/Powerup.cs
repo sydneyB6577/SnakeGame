@@ -11,23 +11,23 @@
         /// <summary>
         ///     The ID representing this powerup object
         /// </summary>
-        public int _powerID { get; set; }
+        public int power { get; set; }
 
         /// <summary>
         ///     The point where this powerup object is drawn on the screen
         /// </summary>
-        public Point2D _spawnPoint { get; set; }
+        public Point2D loc { get; set; }
 
         /// <summary>
         ///     The state of this powerpoint object for whether or not to draw it on the screen
         /// </summary>
-        public bool gameState { get; set; }
+        public bool died { get; set; }
 
         public Powerup()
         {
-            this._powerID = 0;
-            this._spawnPoint = new Point2D(0, 0);
-            this.gameState = true;
+            this.power = 0;
+            this.loc = new Point2D(0, 0);
+            this.died = true;
         }
         //public Powerup(int id, Point2D point)
         //{
