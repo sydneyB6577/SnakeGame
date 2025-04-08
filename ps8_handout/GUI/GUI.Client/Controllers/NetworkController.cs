@@ -16,6 +16,8 @@
         int upDown = 0;
         int leftRight = 0;
 
+        NetworkConnection connection = new NetworkConnection();
+
         // A list to keep track of all of the connections made to the game server.
         //static List<NetworkConnection> connectionList = new List<NetworkConnection>();
 
@@ -35,41 +37,39 @@
         ///     Instruction for upward movement in the game world.
         /// </summary>
         /// <param name="snake"></param>
-        public void moveUP(Snake snake)
+        public void moveUP()
         {
-            upDown++;
-            snake._direction = new Point2D(0, upDown);
+            connection.Send("{\"moving\":\"up\"}\r\n");
         }
 
         /// <summary>
         ///     Instruction for downward movement in the game world.
         /// </summary>
         /// <param name="snake"></param>
-        public void moveDOWN(Snake snake)
+        public void moveDOWN()
         {
-            upDown--;
-            snake._direction = new Point2D(0, upDown);
+            connection.Send("{\"moving\":\"up\"}\r\n");
         }
 
         /// <summary>
         ///     Instruction for left-hand movement in the game world.
         /// </summary>
         /// <param name="snake"></param>
-        public void moveLEFT(Snake snake)
+        public void moveLEFT()
         {
-            leftRight--;
-            snake._direction = new Point2D(leftRight, 0);
+            connection.Send("{\"moving\":\"up\"}\r\n");
         }
 
         /// <summary>
         ///     Instruction for right-hand movement in the game world.
         /// </summary>
         /// <param name="snake"></param>
-        public void moveRIGHT(Snake snake)
+        public void moveRIGHT()
         {
-            leftRight++;
-            snake._direction = new Point2D(leftRight, 0);
+            connection.Send("{\"moving\":\"up\"}\r\n");
         }
+
+
 
         // Maybe make all of the movement handled in a single method to better fit JSON command movement lines.
 
@@ -97,26 +97,27 @@
                     //Read the message from the name box
                     var message = connection.ReadLine(); // world object
 
-                    JsonSerializer.Deserialize(message);
+                    World? world = new World();
 
+                    world = JsonSerializer.Deserialize<World>(message);
 
                     //If the snake is new, the first thing they type and submit is their game name.
 
                     //Send the message (and the snake's name) to every single connected snake.
-                    foreach (NetworkConnection socket in connectionList)
-                    {
-                        //socket.Send(name + ": " + message);
-                        //snake info JSON
-                        JsonSerializer.Deserialize(message);
+                    //foreach (NetworkConnection socket in connectionList)
+                    //{
+                    //    //socket.Send(name + ": " + message);
+                    //    //snake info JSON
+                    //    JsonSerializer.Deserialize(message);
 
-                        socket.Send(JsonSerializer.Serialize(s)); //Check to make sure this is working properly
-                    }
+                    //    socket.Send(JsonSerializer.Serialize(s)); //Check to make sure this is working properly
+                    //}
                 }
             }
             catch (Exception)
             {
                 //If the chat member has disconnected from the chat, remove them from the dictionary.
-                players.Remove(s);
+                throw new Exception("YOU CAN'T DO THAT!");
             }
         }
     }

@@ -21,6 +21,8 @@
     private Canvas2DContext context = null!;
     private IJSObjectReference jsModule = null!;
 
+    NetworkController controller = new NetworkController();
+
     protected override async Task OnAfterRenderAsync( bool firstRender )
     {
         if ( firstRender )
@@ -31,6 +33,8 @@
 
             // TODO: Start the game loop
 
+
+
             // in the meantime, draw something to initialize the canvas
             // you may want to remove this after you are drawing something
             await context.SetFillStyleAsync( "lightblue" );
@@ -40,33 +44,66 @@
 
     //Draws a new snake when a new user connects. 
 
+    private void GameLoop() 
+    {
+        while(true) 
+        {
+            // control the frame rate
+            // update/draw things
+            Thread.Sleep(20);
+            controller.HandleConnect(); // check this thing.
+            DrawFrame();
+        }
+    }
+
+    private async void DrawFrame()
+    {
+        await this.context.SetFillStyleAsync("");
+
+        // Something that draws all the walls and powerups as the world gets made.
+    }
 
     [JSInvokable]
     public void HandleKeyPress( string key )
     {
+
         key = key.ToLower();
         // TODO: Once the client is connected and the handshake is complete,
         //       invoke some controller method to send the appropriate command to the server
-        if (key.Equals("w"))
+        if (key.Equals("w")) /*Keep track of the axis*/
         {
-            NetworkController.
+            controller.moveUP();
         }
-        else if (key.Equals("a"))
+        else if (key.Equals("a")) /*Keep track of the axis*/
         {
-            NetworkController.moveDOWN();
+            controller.moveLEFT();
         }
-        else if (key.Equals("s"))
+        else if (key.Equals("s")) /*Keep track of the axis*/
         {
-            NetworkController.moveLEFT();
+            controller.moveRIGHT();
         }
-        else if (key.Equals("d"))
+        else if (key.Equals("d")) /*Keep track of the axis*/
         {
-            NetworkController.moveRIGHT();
+            controller.moveDOWN();
         }
-
 
         // TODO: Remove this, which is just here to show you what the 'key' string is for whatever key you pressed
         Debug.WriteLine("key pressed: " + key);
+    }
+
+    private async void DrawSnake() 
+    {
+
+    }
+
+    private async void DrawWall()
+    {
+
+    }
+
+    private async void DrawPowerup() 
+    {
+        // Draw powerups based on color
     }
 
 }
