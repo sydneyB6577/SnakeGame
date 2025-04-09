@@ -2,9 +2,9 @@
 {
     public class World
     {
-        public List<Snake> snakes = new List<Snake>();
-        public List<ObstacleWall> walls = new List<ObstacleWall>();
-        public List<Powerup> powerups = new List<Powerup>();
+        public Dictionary<int, Snake> snakes = new Dictionary<int, Snake>();
+        public Dictionary<int, ObstacleWall> walls = new Dictionary<int, ObstacleWall>();
+        public Dictionary<int, Powerup> powerups = new Dictionary<int, Powerup>();
 
         /// <summary>
         ///     The upper side of this world object to draw the gameplay area

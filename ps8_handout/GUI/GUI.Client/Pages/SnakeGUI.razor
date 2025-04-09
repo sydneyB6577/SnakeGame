@@ -29,11 +29,11 @@
         {
             jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>( "import", "./Pages/SnakeGUI.razor.js" );
             context = await canvasReference.CreateCanvas2DAsync();
-            await JsRuntime.InvokeAsync<object>( "initRenderJS", DotNetObjectReference.Create( this ) );           
+            await JsRuntime.InvokeAsync<object>( "initRenderJS", DotNetObjectReference.Create( this ) );
 
             // TODO: Start the game loop
 
-
+            GameLoop();
 
             // in the meantime, draw something to initialize the canvas
             // you may want to remove this after you are drawing something

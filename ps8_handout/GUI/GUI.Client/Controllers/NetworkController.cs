@@ -2,9 +2,11 @@
 {
 
     using System.Data;
+    using System.Drawing;
     using System.Net.Sockets;
     using System.Text;
     using System.Text.Json;
+    using System.Xml.Linq;
     using CS3500.Networking;
     using global::CS3500.Networking;
     using GUI.Client.Models;
@@ -17,6 +19,9 @@
         int leftRight = 0;
 
         NetworkConnection connection = new NetworkConnection();
+        static World gameWorld = new World();
+        List<Color> colors = new List<Color>() {Color.Red, Color.Orange, Color.Yellow, Color.Green,
+                                                Color.Blue, Color.Purple, Color.White, Color.Black};
 
         // A list to keep track of all of the connections made to the game server.
         //static List<NetworkConnection> connectionList = new List<NetworkConnection>();
@@ -93,6 +98,10 @@
             //Create a variable to hold the name of the chat member/connection.
             //Snake s = new Snake();
 
+            // NOTE: We need to have methods in here to set a name for the snake, set the localhost, and the port.
+
+            // NOTE: We call the methods in here inside the GUI.
+
             try
             {
                 while (true)
@@ -100,9 +109,21 @@
                     //Read the message from the name box
                     var message = connection.ReadLine(); // world object
 
-                    World? world = new World();
-
-                    world = JsonSerializer.Deserialize<World>(message);
+                    if(message != null && message is Snake)
+                    {
+                        Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message);
+                        gameWorld.snakes[currentSnake.snake] = currentSnake;
+                    }
+                    if (message != null && message is ObstacleWall)
+                    {
+                        ObstacleWall currentWall = JsonSerializer.Deserialize<ObstacleWall>(message);
+                        gameWorld.walls.Add(currentWall.wall, currentWall);
+                    }
+                    if (message != null && message is Powerup)
+                    {
+                        Powerup currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
+                        gameWorld.powerups.Add(currentPowerup.power, currentPowerup);
+                    }
 
                     //If the snake is new, the first thing they type and submit is their game name.
 
