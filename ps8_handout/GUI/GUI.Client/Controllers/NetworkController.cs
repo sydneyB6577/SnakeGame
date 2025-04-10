@@ -31,6 +31,20 @@
 
         private int colorCounter = 0;
 
+        /// <summary>
+        ///     Determines whether the user is connected or not. 
+        /// </summary>
+        public bool IsConnected { get; private set; }
+
+        /// <summary>
+        ///     Calls the NetworConnection Disconnect method to disconnect the 
+        ///     user from the server.
+        /// </summary>
+        public void DisconnectServer()
+        {
+            connection.Disconnect();
+            IsConnected = false;
+        }
 
         // A list to keep track of all of the connections made to the game server.
         //static List<NetworkConnection> connectionList = new List<NetworkConnection>();
@@ -113,12 +127,10 @@
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name = "name"></param>
         /// THIS IS NOT ENOUGH. the message we're receiving is line by line and each line is an object
         /// need to check if line is wall, snake, or world, then act appripriately (update the entire world). 
         /// Don't deserialize the entire world.
-        public static void HandleConnect(NetworkConnection connection, string name)
+        public void HandleConnect(string name)
         {
             //Only adds the connection to the list if it is a new connection
 
@@ -130,6 +142,7 @@
             // NOTE: We call the methods in here inside the GUI.
 
             connection.Connect("localhost", 11000);
+            IsConnected = true;
 
             connection.Send(name);
 
