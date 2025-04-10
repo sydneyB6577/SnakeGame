@@ -1,11 +1,11 @@
 ﻿namespace GUI.Client.Models
 {
-    /*
-     * This class keeps track of the powerup objects the players can interact with in the game world.
-     * 
-     * Authors: Sydney Burt, Levi Hammond.
-     * Date: 4-2-25
-     */
+
+/// <summary>
+///     This class keeps track of the powerup objects the players can interact with in the game world.
+///     Authors: Sydney Burt, Levi Hammond.
+///     Date: 4-9-25
+/// </summary>
     public class Powerup
     {
         /// <summary>
@@ -23,6 +23,9 @@
         /// </summary>
         public bool died { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Powerup()
         {
             this.power = 0;

@@ -1,9 +1,9 @@
 ﻿namespace GUI.Client.Models
 {
     /// <summary>
-    /// This class keeps track of the sname object the player uses to interact with the game world.
-    /// Authors: Sydney Burt, Levi Hammond
-    /// DateL 4-9-25
+    ///     This class keeps track of the sname object the player uses to interact with the game world.
+    ///     Authors: Sydney Burt, Levi Hammond
+    ///     Date: 4-9-25
     /// </summary>
     public class Snake
     {

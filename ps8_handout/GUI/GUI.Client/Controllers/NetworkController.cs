@@ -13,6 +13,10 @@
 
     //namespace GUI.Client.Controllers
     //{
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class NetworkController
     {
         NetworkConnection connection = new NetworkConnection();
@@ -50,7 +54,6 @@
         /// <summary>
         ///     Instruction for upward movement in the game world.
         /// </summary>
-        /// <param name="snake"></param>
         public void moveUP()
         {
             connection.Send("{\"moving\":\"up\"}\r\n");
@@ -59,7 +62,6 @@
         /// <summary>
         ///     Instruction for downward movement in the game world.
         /// </summary>
-        /// <param name="snake"></param>
         public void moveDOWN()
         {
             connection.Send("{\"moving\":\"up\"}\r\n");
@@ -68,7 +70,6 @@
         /// <summary>
         ///     Instruction for left-hand movement in the game world.
         /// </summary>
-        /// <param name="snake"></param>
         public void moveLEFT()
         {
             connection.Send("{\"moving\":\"up\"}\r\n");
@@ -77,7 +78,6 @@
         /// <summary>
         ///     Instruction for right-hand movement in the game world.
         /// </summary>
-        /// <param name="snake"></param>
         public void moveRIGHT()
         {
             connection.Send("{\"moving\":\"up\"}\r\n");
@@ -119,20 +119,20 @@
                     //Read the message from the name box
                     var message = connection.ReadLine(); // world object
 
-                    if(message != null && message is Snake)
+                    if (message != null && message.Contains("snake"))
                     {
                         Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message);
-                        gameWorld.snakes[currentSnake.snake] = currentSnake;
+                        gameWorld.snakes[currentSnake!.snake] = currentSnake;
                     }
-                    if (message != null && message is ObstacleWall)
+                    if (message != null && message.Contains("wall"))
                     {
-                        ObstacleWall currentWall = JsonSerializer.Deserialize<ObstacleWall>(message);
-                        gameWorld.walls[currentWall.wall] = currentWall;
+                        ObstacleWall? currentWall = JsonSerializer.Deserialize<ObstacleWall>(message);
+                        gameWorld.walls[currentWall!.wall] = currentWall;
                     }
-                    if (message != null && message is Powerup)
+                    if (message != null && message.Contains("powerup"))
                     {
-                        Powerup currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
-                        gameWorld.powerups[currentPowerup.power] = currentPowerup;
+                        Powerup? currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
+                        gameWorld.powerups[currentPowerup!.power] = currentPowerup;
                     }
 
                     //If the snake is new, the first thing they type and submit is their game name.

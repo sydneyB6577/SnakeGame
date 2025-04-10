@@ -59,8 +59,6 @@
 
     private async Task DrawFrame()
     {
-        //await this.context.SetFillStyleAsync("");
-
         await context.BeginBatchAsync();
 
         // clip the view so that objects drawn outside the canvas will not be shown
@@ -76,39 +74,63 @@
         await context.TranslateAsync(-head.X, -head.Y);
 
         // Draw the background:
-        await context.DrawImageAsync(backgroundImage, -world.Width / 2, -world.Height / 2, world.Width, world.Height);
+        await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
 
-        
-        await context.DrawImageAsync(backgroundImage, 0, 0, ViewWidth, ViewHeight);
 
         // Something that draws all the walls and powerups as the world gets made.
+
+
         foreach (Snake p in TheWorld.snakes.Values)
         {
-            //while ( r.Next() % 10000 != 0 ) ; // ignore this loop for now
-
-            // prep to draw a circle
+            //Prep to draw a snake
             await context.SetLineWidthAsync(5);
 
-            // red for team 0, blue for team 1
-            if (p.ID % 2 == 0)
-                await context.SetStrokeStyleAsync($"rgb( 255, 0, 0 )");
-            else
-                await context.SetStrokeStyleAsync($"rgb( 0, 0, 255 )");
+            //Select a color that hasn't been chosen before (rn its red)
+            await context.SetStrokeStyleAsync($"rgb( 255, 0, 0 )");
 
-            // draw the circle
+            //Draw a snake
+            await context.SetLineCapAsync(LineCap.Round);
             await context.BeginPathAsync();
-            await context.ArcAsync(p.Position.X, p.Position.Y, 10, 0, 2 * Math.PI);
+            //Starting location of the snake/line (tail)
+            await context.MoveToAsync(50, 50);
+            //Ending location of the snake/line (head)
+            await context.LineToAsync(100, 50);
             await context.StrokeAsync();
         }
 
-        foreach (Powerup p in TheWorld.Powerups.Values) //Bug
+        foreach (Powerup p in TheWorld.powerups.Values) //Bug
         {
             // smaller yellow circle for powerups
             await context.SetLineWidthAsync(5);
             await context.SetStrokeStyleAsync($"rgb( 255, 255, 0 )");
             await context.BeginPathAsync();
-            await context.ArcAsync(p.Position.X, p.Position.Y, 3, 0, 2 * Math.PI);
+            await context.ArcAsync(p.loc.x, p.loc.y, 3, 0, 2 * Math.PI);
             await context.StrokeAsync();
+        }
+
+        //Might not need the for-each loop because I dont need to make the walls several times.
+        foreach (ObstacleWall wall in TheWorld.walls.Values)
+        {
+            //Have two walls: one vertical and one horizontal
+
+            //Draw walls surrounding the world
+            //Vertical Left
+            await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+            //Vertical Right
+            await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+            //Horizontal Top
+            await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+            //Horizontal Bottom
+            await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+
+            //Draw ___ (6? 10?) randomly placed and rotated walls in the world
+            for(int i = 0; i < 3; i++)
+            {
+                //Draw one vertical wall in a random spot
+                await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+                //Draw one horizontal wall in a random spot
+                await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+            }
         }
 
         // finish batch drawing
@@ -120,7 +142,6 @@
     [JSInvokable]
     public void HandleKeyPress( string key )
     {
-
         key = key.ToLower();
         // TODO: Once the client is connected and the handshake is complete,
         //       invoke some controller method to send the appropriate command to the server
@@ -145,20 +166,12 @@
         Debug.WriteLine("key pressed: " + key);
     }
 
-    private async void DrawSnake() 
+    /// <summary>
+    ///     Draws a new snake each time someone connects to the world.
+    /// </summary>
+    private async void DrawSnake()
     {
 
     }
-
-    private async void DrawWall()
-    {
-
-    }
-
-    private async void DrawPowerup() 
-    {
-        // Draw powerups based on color
-    }
-
 }
 
