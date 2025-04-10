@@ -33,7 +33,7 @@
     </div>
 </div>
 <div class=music-adjustable>
-    <button class="btn btn-primary" onclick="">Music</button> @* Change this to just be a bar*@
+    <button class="btn btn-primary" onclick="">Music</button> @* Change this to just be a volume bar*@
 </div>
 
 <audio id="player">
@@ -42,6 +42,11 @@
 
 @code
 {
+    public SnakeGUI()
+    {
+        //Do we even put anything in here?
+    }
+
     /// <summary>
     /// Default server name
     /// </summary>
@@ -65,10 +70,11 @@
     /// <summary>
     ///     The first point object in a Snake's body list.
     /// </summary>
-    private Point2D head;
+    private Point2D? head;
 
     private const int WorldSize = 1000;
-    private World TheWorld = new();
+    //This may cause problems - review
+    public static World TheWorld = new();
     private BECanvasComponent canvasReference = null!;
     private Canvas2DContext context = null!;
     private IJSObjectReference jsModule = null!;
@@ -85,6 +91,7 @@
             jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>( "import", "./Pages/SnakeGUI.razor.js" );
             context = await canvasReference.CreateCanvas2DAsync();
             await JsRuntime.InvokeAsync<object>( "initRenderJS", DotNetObjectReference.Create( this ) );
+            new Thread(() => NetworkLoop()).Start();
 
             //Connect to the server)
 
@@ -92,21 +99,34 @@
         }
     }
 
-    //Draws a new snake when a new user connects. 
+    /// <summary>
+    /// 
+    /// </summary>
+    private void NetworkLoop()
+    {
+        while(true)
+        {
+            controller.connection.Connect("localhost", 11000);
+        }
+    }
 
+    /// <summary>
+    ///     Renders the view once every 20 milliseconds. 
+    /// </summary>
     private async void GameLoop() 
     {
         while(true) 
         {
-            // control the frame rate
-            // update/draw things
             Thread.Sleep(20);
-            controller.connection.Connect("localhost", 11000);
-            // check this thing.
             await DrawFrame();
         }
     }
 
+    /// <summary>
+    ///     Draws all the items in the game including the background, walls, powerups, and snakes.
+    ///     Draws one frame of the game.
+    /// </summary>
+    /// <returns></returns>
     private async Task DrawFrame()
     {
         await context.BeginBatchAsync();
@@ -121,7 +141,7 @@
 
         // Center on origin, move to center of view port
         await context.TranslateAsync(ViewWidth / 2, ViewHeight / 2);
-        await context.TranslateAsync(-head.x, -head.y);
+        await context.TranslateAsync(-head!.x, -head.y);
 
         // Draw the background:
         await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);

@@ -3,6 +3,7 @@
 
     using System.Data;
     using System.Drawing;
+    using System.Net.NetworkInformation;
     using System.Net.Sockets;
     using System.Text;
     using System.Text.Json;
@@ -10,6 +11,7 @@
     using CS3500.Networking;
     using global::CS3500.Networking;
     using GUI.Client.Models;
+    using GUI.Client.Pages;
 
     //namespace GUI.Client.Controllers
     //{
@@ -19,6 +21,9 @@
     /// </summary>
     public class NetworkController
     {
+        /// <summary>
+        ///     
+        /// </summary>
         public NetworkConnection connection = new NetworkConnection();
         static World gameWorld = new World();
         List<Color> colors = new List<Color>() {Color.Red, Color.Orange, Color.Yellow, Color.Green,
@@ -109,6 +114,7 @@
         /// 
         /// </summary>
         /// <param name="connection"></param>
+        /// <param name = "name"></param>
         /// THIS IS NOT ENOUGH. the message we're receiving is line by line and each line is an object
         /// need to check if line is wall, snake, or world, then act appripriately (update the entire world). 
         /// Don't deserialize the entire world.
@@ -137,17 +143,17 @@
                     if (message != null && message.Contains("snake")) // check if the string contains the word snake
                     {
                         Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message); // deserialize the snake object
-                        gameWorld.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary
+                        SnakeGUI.TheWorld.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary
                     }
                     else if (message != null && message.Contains("wall"))
                     {
                         ObstacleWall? currentWall = JsonSerializer.Deserialize<ObstacleWall>(message);
-                        gameWorld.walls[currentWall!.wall] = currentWall;
+                        SnakeGUI.TheWorld.walls[currentWall!.wall] = currentWall;
                     }
                     else if (message != null && message.Contains("powerup"))
                     {
                         Powerup? currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
-                        gameWorld.powerups[currentPowerup!.power] = currentPowerup;
+                        SnakeGUI.TheWorld.powerups[currentPowerup!.power] = currentPowerup;
                     }
 
                     //If the snake is new, the first thing they type and submit is their game name.
