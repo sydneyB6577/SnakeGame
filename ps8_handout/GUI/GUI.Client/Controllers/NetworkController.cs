@@ -15,13 +15,12 @@
     //{
     public class NetworkController
     {
-        int upDown = 0;
-        int leftRight = 0;
-
         NetworkConnection connection = new NetworkConnection();
         static World gameWorld = new World();
         List<Color> colors = new List<Color>() {Color.Red, Color.Orange, Color.Yellow, Color.Green,
                                                 Color.Blue, Color.Purple, Color.White, Color.Black};
+
+
 
         // A list to keep track of all of the connections made to the game server.
         //static List<NetworkConnection> connectionList = new List<NetworkConnection>();
@@ -37,6 +36,16 @@
         // methods that define up down left and right movement
 
         // someone connecting to or exiting the game
+
+        /// <summary>
+        /// Method that establishes a connection to the server.
+        /// </summary>
+        /// <param name="handleConnect"></param>
+        /// <param name="port"></param>
+        public void ConnectToServer(Action<NetworkConnection> handleConnect, int port)
+        {
+            connection.Connect(HandleConnect, 11000);
+        }
 
         /// <summary>
         ///     Instruction for upward movement in the game world.
@@ -104,6 +113,7 @@
 
             try
             {
+
                 while (true)
                 {
                     //Read the message from the name box
@@ -117,12 +127,12 @@
                     if (message != null && message is ObstacleWall)
                     {
                         ObstacleWall currentWall = JsonSerializer.Deserialize<ObstacleWall>(message);
-                        gameWorld.walls.Add(currentWall.wall, currentWall);
+                        gameWorld.walls[currentWall.wall] = currentWall;
                     }
                     if (message != null && message is Powerup)
                     {
                         Powerup currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
-                        gameWorld.powerups.Add(currentPowerup.power, currentPowerup);
+                        gameWorld.powerups[currentPowerup.power] = currentPowerup;
                     }
 
                     //If the snake is new, the first thing they type and submit is their game name.
