@@ -17,9 +17,14 @@
 
 @code
 {
+    private const int WorldSize = 1000;
+    private World TheWorld = new(WorldSize);
     private BECanvasComponent canvasReference = null!;
     private Canvas2DContext context = null!;
     private IJSObjectReference jsModule = null!;
+    private ElementReference backgroundImage;
+    private const int ViewWidth = 1000;
+    private const int ViewHeight = 1000;
 
     NetworkController controller = new NetworkController();
 
@@ -31,20 +36,15 @@
             context = await canvasReference.CreateCanvas2DAsync();
             await JsRuntime.InvokeAsync<object>( "initRenderJS", DotNetObjectReference.Create( this ) );
 
-            // TODO: Start the game loop
+            //Connect to the server)
 
             GameLoop();
-
-            // in the meantime, draw something to initialize the canvas
-            // you may want to remove this after you are drawing something
-            await context.SetFillStyleAsync( "lightblue" );
-            await context.FillRectAsync( 0, 0, 1000, 1000 );
         }
     }
 
     //Draws a new snake when a new user connects. 
 
-    private void GameLoop() 
+    private async void GameLoop() 
     {
         while(true) 
         {
@@ -52,15 +52,52 @@
             // update/draw things
             Thread.Sleep(20);
             controller.HandleConnect(); // check this thing.
-            DrawFrame();
+            await DrawFrame();
         }
     }
 
-    private async void DrawFrame()
+    private async Task DrawFrame()
     {
-        await this.context.SetFillStyleAsync("");
+        //await this.context.SetFillStyleAsync("");
+
+        await context.BeginBatchAsync();
+
+        await context.DrawImageAsync(backgroundImage, 0, 0, ViewWidth, ViewHeight);
 
         // Something that draws all the walls and powerups as the world gets made.
+        foreach (Snake p in TheWorld.Players.Values)
+        {
+            //while ( r.Next() % 10000 != 0 ) ; // ignore this loop for now
+
+            // prep to draw a circle
+            await context.SetLineWidthAsync(5);
+
+            // red for team 0, blue for team 1
+            if (p.ID % 2 == 0)
+                await context.SetStrokeStyleAsync($"rgb( 255, 0, 0 )");
+            else
+                await context.SetStrokeStyleAsync($"rgb( 0, 0, 255 )");
+
+            // draw the circle
+            await context.BeginPathAsync();
+            await context.ArcAsync(p.Position.X, p.Position.Y, 10, 0, 2 * Math.PI);
+            await context.StrokeAsync();
+        }
+
+        foreach (Powerup p in TheWorld.Powerups.Values) //Bug
+        {
+            // smaller yellow circle for powerups
+            await context.SetLineWidthAsync(5);
+            await context.SetStrokeStyleAsync($"rgb( 255, 255, 0 )");
+            await context.BeginPathAsync();
+            await context.ArcAsync(p.Position.X, p.Position.Y, 3, 0, 2 * Math.PI);
+            await context.StrokeAsync();
+        }
+
+        // finish batch drawing
+        await context.EndBatchAsync();
+
+        StateHasChanged();
     }
 
     [JSInvokable]
