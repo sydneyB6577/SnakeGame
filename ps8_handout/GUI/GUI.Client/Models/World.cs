@@ -7,31 +7,20 @@
         public Dictionary<int, Powerup> powerups = new Dictionary<int, Powerup>();
 
         /// <summary>
-        ///     The upper side of this world object to draw the gameplay area
+        /// The size of a single side of the square world
         /// </summary>
-        public int worldTopDimention { get; set; }
+        public int Size
+        { get; private set; }
 
-        /// <summary>
-        ///     The lower side of this world object to draw the gameplay area
-        /// </summary>
-        public int worldBottomDimention { get; set; }
+        public int Width
+            { get; private set; }
 
-        /// <summary>
-        ///     The left-hand side of this world object to draw the gameplay area
-        /// </summary>
-        public int worldLeftDimention { get; set; }
-
-        /// <summary>
-        ///     The right-hand side of this world object to draw the gameplay area
-        /// </summary>
-        public int worldRightDimention { get; set; }
+        public int Height 
+            { get; private set; }
 
         public World()
         {
-            this.worldTopDimention = 0;
-            this.worldBottomDimention = 0;
-            this.worldLeftDimention = 0;
-            this.worldRightDimention = 0;
+            this.Size = 1000;
         }
 
         //public World(int x, int y)
