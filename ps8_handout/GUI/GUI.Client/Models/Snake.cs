@@ -1,4 +1,6 @@
-﻿namespace GUI.Client.Models
+﻿using System.Drawing;
+
+namespace GUI.Client.Models
 {
     /// <summary>
     ///     This class keeps track of the sname object the player uses to interact with the game world.

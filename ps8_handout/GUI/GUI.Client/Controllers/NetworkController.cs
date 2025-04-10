@@ -19,10 +19,11 @@
     /// </summary>
     public class NetworkController
     {
-        NetworkConnection connection = new NetworkConnection();
+        public NetworkConnection connection = new NetworkConnection();
         static World gameWorld = new World();
         List<Color> colors = new List<Color>() {Color.Red, Color.Orange, Color.Yellow, Color.Green,
                                                 Color.Blue, Color.Purple, Color.White, Color.Black};
+        private string name = "";
 
 
 
@@ -41,15 +42,15 @@
 
         // someone connecting to or exiting the game
 
-        /// <summary>
-        /// Method that establishes a connection to the server.
-        /// </summary>
-        /// <param name="handleConnect"></param>
-        /// <param name="port"></param>
-        public void ConnectToServer(Action<NetworkConnection> handleConnect, int port)
-        {
-            connection.Connect(HandleConnect, 11000);
-        }
+        ///// <summary>
+        ///// Method that establishes a connection to the server.
+        ///// </summary>
+        ///// <param name="handleConnect"></param>
+        ///// <param name="port"></param>
+        //public void ConnectToServer(Action<NetworkConnection> handleConnect, int port)
+        //{
+        //    connection.Connect(handleConnect, 11000);
+        //}
 
         /// <summary>
         ///     Instruction for upward movement in the game world.
@@ -83,7 +84,15 @@
             connection.Send("{\"moving\":\"up\"}\r\n");
         }
 
-
+        /// <summary>
+        ///     This method will return the name given by the user.
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        public string setUserName(string userName)
+        {
+            return userName;
+        }
 
         // Maybe make all of the movement handled in a single method to better fit JSON command movement lines.
 
@@ -100,7 +109,7 @@
         /// THIS IS NOT ENOUGH. the message we're receiving is line by line and each line is an object
         /// need to check if line is wall, snake, or world, then act appripriately (update the entire world). 
         /// Don't deserialize the entire world.
-        public static void HandleConnect(NetworkConnection connection)
+        public static void HandleConnect(NetworkConnection connection, string name)
         {
             //Only adds the connection to the list if it is a new connection
 
@@ -111,25 +120,28 @@
 
             // NOTE: We call the methods in here inside the GUI.
 
+            connection.Connect("localhost", 11000);
+
+            connection.Send(name);
+
             try
             {
-
                 while (true)
                 {
                     //Read the message from the name box
                     var message = connection.ReadLine(); // world object
 
-                    if (message != null && message.Contains("snake"))
+                    if (message != null && message.Contains("snake")) // check if the string contains the word snake
                     {
-                        Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message);
-                        gameWorld.snakes[currentSnake!.snake] = currentSnake;
+                        Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message); // deserialize the snake object
+                        gameWorld.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary
                     }
-                    if (message != null && message.Contains("wall"))
+                    else if (message != null && message.Contains("wall"))
                     {
                         ObstacleWall? currentWall = JsonSerializer.Deserialize<ObstacleWall>(message);
                         gameWorld.walls[currentWall!.wall] = currentWall;
                     }
-                    if (message != null && message.Contains("powerup"))
+                    else if (message != null && message.Contains("powerup"))
                     {
                         Powerup? currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
                         gameWorld.powerups[currentPowerup!.power] = currentPowerup;
