@@ -24,6 +24,7 @@
         List<Color> colors = new List<Color>() {Color.Red, Color.Orange, Color.Yellow, Color.Green,
                                                 Color.Blue, Color.Purple, Color.White, Color.Black};
 
+        private int colorCounter = 0;
 
 
         // A list to keep track of all of the connections made to the game server.
@@ -83,16 +84,18 @@
             connection.Send("{\"moving\":\"up\"}\r\n");
         }
 
+        /// <summary>
+        ///     Sets the snake to a new color for the first 8 snakes. After that, the colors are repeated.
+        /// </summary>
+        /// <param name="colors">A list of colors the method can choose from.</param>
+        /// <returns>The color of the new snake.</returns>
         public Color setSnakeColor(List<Color> colors)
         {
-            Random rand = new(colors.Count);
-            int colorNumber = rand.Next();
-            Color playerColor = colors[colorNumber];
-            colors.Remove(colors[colorNumber]);
+            Color playerColor = colors[colorCounter];
+            colorCounter++;
+            colorCounter %= colors.Count;
             return playerColor;
-        }
-
-        public 
+        } 
 
         // Maybe make all of the movement handled in a single method to better fit JSON command movement lines.
 
