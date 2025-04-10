@@ -23,7 +23,6 @@
         static World gameWorld = new World();
         List<Color> colors = new List<Color>() {Color.Red, Color.Orange, Color.Yellow, Color.Green,
                                                 Color.Blue, Color.Purple, Color.White, Color.Black};
-        private string name = "";
 
 
 
@@ -84,15 +83,16 @@
             connection.Send("{\"moving\":\"up\"}\r\n");
         }
 
-        /// <summary>
-        ///     This method will return the name given by the user.
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <returns></returns>
-        public string setUserName(string userName)
+        public Color setSnakeColor(List<Color> colors)
         {
-            return userName;
+            Random rand = new(colors.Count);
+            int colorNumber = rand.Next();
+            Color playerColor = colors[colorNumber];
+            colors.Remove(colors[colorNumber]);
+            return playerColor;
         }
+
+        public 
 
         // Maybe make all of the movement handled in a single method to better fit JSON command movement lines.
 

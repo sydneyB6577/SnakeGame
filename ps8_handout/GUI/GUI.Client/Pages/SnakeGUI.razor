@@ -30,6 +30,13 @@
         <button class="btn btn-primary" @onclick="ConnectToServer">Connect</button>
         }
     </div>
+    <div class=music-adjustable>
+        <button class="btn btn-primary" onclick="">Music</button> @* Change this to just be a bar*@
+    </div>
+
+    <audio id="player">
+        <source id="playerSource" src="" />
+    </audio>
 
     @code
     {
@@ -201,14 +208,6 @@
 
         // TODO: Remove this, which is just here to show you what the 'key' string is for whatever key you pressed
         Debug.WriteLine("key pressed: " + key);
-    }
-
-    /// <summary>
-    ///     Draws a new snake each time someone connects to the world.
-    /// </summary>
-    private async void DrawSnake()
-    {
-
     }
 }
 
