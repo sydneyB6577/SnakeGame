@@ -7,6 +7,7 @@
 @using System.Diagnostics
 @using System.Text.Json
 @using GUI.Client.Controllers;
+@using GUI.Client.Models;
 @inject IJSRuntime JsRuntime;
 
 <PageTitle> Snake </PageTitle>
@@ -18,7 +19,7 @@
 @code
 {
     private const int WorldSize = 1000;
-    private World TheWorld = new(WorldSize);
+    private World TheWorld = new();
     private BECanvasComponent canvasReference = null!;
     private Canvas2DContext context = null!;
     private IJSObjectReference jsModule = null!;
@@ -62,10 +63,26 @@
 
         await context.BeginBatchAsync();
 
+        // clip the view so that objects drawn outside the canvas will not be shown
+        await context.BeginPathAsync();
+        await context.RectAsync(0, 0, ViewWidth, ViewHeight);
+        await context.ClipAsync();
+
+        // Because we are modifying the transformation matrix, we need to save it so we can restore it at the end
+        await context.SaveAsync();
+
+        // Center on origin, move to center of view port
+        await context.TranslateAsync(ViewWidth / 2, ViewHeight / 2);
+        await context.TranslateAsync(-head.X, -head.Y);
+
+        // Draw the background:
+        await context.DrawImageAsync(backgroundImage, -world.Width / 2, -world.Height / 2, world.Width, world.Height);
+
+        
         await context.DrawImageAsync(backgroundImage, 0, 0, ViewWidth, ViewHeight);
 
         // Something that draws all the walls and powerups as the world gets made.
-        foreach (Snake p in TheWorld.Players.Values)
+        foreach (Snake p in TheWorld.snakes.Values)
         {
             //while ( r.Next() % 10000 != 0 ) ; // ignore this loop for now
 

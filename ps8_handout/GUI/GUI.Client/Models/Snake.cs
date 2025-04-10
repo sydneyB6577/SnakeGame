@@ -1,11 +1,10 @@
 ﻿namespace GUI.Client.Models
 {
-    /*
-     * This class keeps track of the snake object the player uses to interact with the game world.
-     * 
-     * Authors: Sydney Burt, Levi Hammond.
-     * Date: 4-2-25
-     */
+    /// <summary>
+    /// This class keeps track of the sname object the player uses to interact with the game world.
+    /// Authors: Sydney Burt, Levi Hammond
+    /// DateL 4-9-25
+    /// </summary>
     public class Snake
     {
         /// <summary>
@@ -53,6 +52,9 @@
         /// </summary>
         public bool join { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Snake()
         {
             this.snake = 0;
