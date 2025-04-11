@@ -37,6 +37,14 @@
             this.Size = 1000;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public World(World world)
+        {
+            this.Size = world.Size; 
+        }
+
         //public World(int x, int y)
         //{
         //    this.worldTopDimention = x;

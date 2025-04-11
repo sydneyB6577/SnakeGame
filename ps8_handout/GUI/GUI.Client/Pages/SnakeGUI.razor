@@ -13,6 +13,9 @@
 
 <PageTitle> Snake </PageTitle>
 <img @ref="backgroundImage" id="bgImage" src="images/Background.png" alt="image" style="display:none;" />
+<img @ref="SpaceImage" id="bgImage" src="images/Space Background.jpg" alt="image" style="display:none;" />
+<img @ref="ForestImage" id="bgImage" src="images/Forest Floor Background.jpg" alt="image" style="display:none;" />
+<img @ref="DesertImage" id="bgImage" src="images/Desert Background.jpg" alt="image" style="display:none;" />
 
 <div class="input-row">
 	<label for="url"> Server Address: </label>
@@ -78,6 +81,9 @@
 	private Canvas2DContext context = null!;
 	private IJSObjectReference jsModule = null!;
 	private ElementReference backgroundImage;
+	private ElementReference SpaceImage;
+	private ElementReference ForestImage;
+	private ElementReference DesertImage;
 	private const int ViewWidth = 1000;
 	private const int ViewHeight = 1000;
 
@@ -145,7 +151,7 @@
 
 		// 	Select a color that hasn't been chosen before (rn its red)
 
-		// 	await context.SetStrokeStyleAsync(network.setSnakeColor(network.colors).ToString()); Might have to change if this does not work.
+		// 	await context.SetStrokeStyleAsync(network.setSnakeColor(network.colors)); Might have to change if this does not work.
 
 		// 	Draw a snake
 		// 	await context.SetLineCapAsync(LineCap.Round);
