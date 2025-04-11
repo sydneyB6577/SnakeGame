@@ -12,6 +12,7 @@
 @inject IJSRuntime JsRuntime;
 
 <PageTitle> Snake </PageTitle>
+<img @ref="backgroundImage" id="bgImage" src="images/Background.png" alt="image" style="display:none;" />
 
 <div class="input-row">
 	<label for="url"> Server Address: </label>
@@ -37,6 +38,7 @@
 <div class=music-adjustable>
 	@* <button class="btn btn-primary" @onclick="ConnectToServer">Music</button> @* Change this to just be a volume bar*@
 </div>
+
 
 <audio id="player">
 	<source id="playerSource" src="" />
@@ -91,7 +93,7 @@
 	/// <returns></returns>
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		if (firstRender && network.IsConnected)
+		if (firstRender)
 		{
 			jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Pages/SnakeGUI.razor.js");
 			context = await canvasReference.CreateCanvas2DAsync();
@@ -120,22 +122,22 @@
 	/// <returns></returns>
 	private async Task DrawFrame()
 	{
-		await context.BeginBatchAsync();
+		// await context.BeginBatchAsync();
 
 		// clip the view so that objects drawn outside the canvas will not be shown
-		await context.BeginPathAsync();
-		await context.RectAsync(0, 0, ViewWidth, ViewHeight);
-		await context.ClipAsync();
+		// await context.BeginPathAsync();
+		// await context.RectAsync(0, 0, ViewWidth, ViewHeight);
+		// await context.ClipAsync();
 
-		// Because we are modifying the transformation matrix, we need to save it so we can restore it at the end
-		await context.SaveAsync();
+		// // Because we are modifying the transformation matrix, we need to save it so we can restore it at the end
+		// await context.SaveAsync();
 
 		// Center on origin, move to center of view port
-		await context.TranslateAsync(ViewWidth / 2, ViewHeight / 2);
+		// await context.TranslateAsync(ViewWidth / 2, ViewHeight / 2);
 		// await context.TranslateAsync(-head!.x, -head.y);
 
 		// Draw the background:
-		await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+		await context.DrawImageAsync(backgroundImage, 0, 0, ViewWidth, ViewHeight);
 
 
 		// Something that draws all the walls and powerups as the world gets made.
@@ -173,7 +175,10 @@
 		// Might not need the for-each loop because I dont need to make the walls several times.
 		// foreach (ObstacleWall wall in TheWorld.walls.Values)
 		// {
+
 		// 	Have two walls: one vertical and one horizontal
+
+
 
 		// 	Draw walls surrounding the world
 		// 	Vertical Left
@@ -199,7 +204,7 @@
 		// }
 
 		// finish batch drawing
-		await context.EndBatchAsync();
+		// await context.EndBatchAsync();
 
 		StateHasChanged();
 	}
