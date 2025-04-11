@@ -105,7 +105,7 @@
         /// THIS IS NOT ENOUGH. the message we're receiving is line by line and each line is an object
         /// need to check if line is wall, snake, or world, then act appripriately (update the entire world). 
         /// Don't deserialize the entire world.
-        public void HandleConnect(string name, World world)
+        public async void HandleConnect(string name, World world)
         {
             connection.Connect("localhost", 11000);
             IsConnected = true;
@@ -129,7 +129,9 @@
                         Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message); // deserialize the snake object
                         if (currentSnake.ToString().Contains("\"died\":true"))
                         {
-
+                            world.snakes.Remove(currentSnake.snake, out currentSnake);
+                            Thread.Sleep(40);
+                            //world.snakes.Add();
                         }
                         world.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary or update it
                     }
@@ -152,7 +154,8 @@
             catch (Exception)
             {
                 //If the chat member has disconnected from the chat, remove them from the dictionary.
-                throw new Exception("YOU CAN'T DO THAT!");
+                DisconnectServer();
+                //throw new Exception("YOU CAN'T DO THAT!");
             }
         }
     }
