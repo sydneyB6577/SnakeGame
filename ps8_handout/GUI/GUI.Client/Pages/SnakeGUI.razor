@@ -35,18 +35,14 @@
 	}
 </div>
 
+<button class="btn btn-primary" @onclick="setDesertBackground">Desert</button> 
+<button class="btn btn-primary" @onclick="setForestBackground">Forest</button> 
+<button class="btn btn-primary" @onclick="setSpaceBackground">Space</button> 
+
+
 <div id="snakeCanvas" style="position: fixed; width: 100%; height: 100%">
 	<BECanvas Width="1000" Height="1000" @ref="canvasReference"></BECanvas>
 </div>
-
-<div class=music-adjustable>
-	@* <button class="btn btn-primary" @onclick="ConnectToServer">Music</button> @* Change this to just be a volume bar*@
-</div>
-
-
-<audio id="player">
-	<source id="playerSource" src="" />
-</audio>
 
 @code
 {
@@ -75,7 +71,8 @@
 	/// </summary>
 	private string UserName = "";
 
-	private Point2D head = new Point2D(1000, 1000);
+	private Point2D head = new Point2D();
+	private Point2D tail = new Point2D();
 
 	private const int WorldSize = 1000;
 	//This may cause problems - review
@@ -87,6 +84,7 @@
 	private ElementReference DesertImage;
 	private ElementReference ForestImage;
 	private ElementReference SpaceImage;
+	private ElementReference ImageSelection; 
 	private ElementReference wallImage;
 	private const int ViewWidth = 1000;
 	private const int ViewHeight = 1000;
@@ -160,12 +158,18 @@
 			await context.SetStrokeStyleAsync(network.setSnakeColor(network.colors).ToString()); // Might have to change if this does not work.
 
 			//Draw a snake
+
+			// draw code loop for each point in the snake body
+			// move to the tail first
+			// line to async
 			await context.SetLineCapAsync(LineCap.Round);
+			await context.SetLineWidthAsync(10);
 			await context.BeginPathAsync();
-			//Starting location of the snake/line (tail)
-			await context.MoveToAsync(snake.tail.X, snake.tail.Y);
-			//Ending location of the snake/line (head)
-			await context.LineToAsync(snake.head.X, snake.head.Y);
+			await context.MoveToAsync(snake.body[0].X, snake.body[0].Y);
+			for (int i = 0; i < snake.body.Count - 1; i += 1) 
+			{
+				await context.LineToAsync(snake.body[i].X, snake.body[i].Y);
+			}
 			await context.StrokeAsync();
 		}
 
@@ -281,5 +285,21 @@
 			Debug.WriteLine("key pressed: " + key);
 		}
 	}
+
+	private void setDesertBackground()
+	{
+		ImageSelection = DesertImage;
+	}
+
+	private void setForestBackground()
+	{
+		ImageSelection = ForestImage;
+	}
+
+	private void setSpaceBackground()
+	{
+		ImageSelection = SpaceImage;
+	}
+
 }
 
