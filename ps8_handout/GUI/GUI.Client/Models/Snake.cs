@@ -20,9 +20,11 @@ namespace GUI.Client.Models
         public string name { get; set; }
 
         /// <summary>
-        ///     The list of objects to draw for this snake object's representation
+        ///     List of Point2D points in the snake.
+        ///     Tail is 1st point in the body point list.
+        ///     Head is last point in the body point list.
         /// </summary>
-        public List<Point2D> body { get; set; }
+        public List<Point2D> body {  get; set; }
 
         /// <summary>
         ///     The direction this snake object is traveling

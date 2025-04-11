@@ -67,11 +67,6 @@
 	/// </summary>
 	private string UserName = "steve";
 
-	/// <summary>
-	///     The first point object in a Snake's body list.
-	/// </summary>
-	private Point2D? head;
-
 	private const int WorldSize = 1000;
 	//This may cause problems - review
 	public static World TheWorld = new();
@@ -152,9 +147,10 @@
 			await context.SetLineCapAsync(LineCap.Round);
 			await context.BeginPathAsync();
 			//Starting location of the snake/line (tail)
-			await context.MoveToAsync(50, 50);
+			await context.MoveToAsync(99, 80);
 			//Ending location of the snake/line (head)
 			await context.LineToAsync(100, 50);
+			//How to determine what head and tail are? Do we change those or does the server? 
 			await context.StrokeAsync();
 		}
 
