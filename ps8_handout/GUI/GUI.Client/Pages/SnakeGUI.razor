@@ -129,6 +129,7 @@
 		lock(TheWorld) {
 			copyWorld = new(TheWorld);
 		}
+
 		await context.BeginBatchAsync();
 
 		// clip the view so that objects drawn outside the canvas will not be shown
@@ -141,10 +142,10 @@
 
 		//Center on origin, move to center of view port
 		await context.TranslateAsync(ViewWidth / 2, ViewHeight / 2);
-		//await context.TranslateAsync(-head!.x, -head.y);
+		await context.TranslateAsync(copyWorld.snakes[0]., copyWorld.snakes.body[0].x);
 
 		// Draw the background:
-		await context.DrawImageAsync(backgroundImage, -copyWorld.Size, 0, ViewWidth, ViewHeight);
+		await context.DrawImageAsync(backgroundImage, -2000/2, -2000/2, 2000, 2000);
 
 
 		// Something that draws all the walls and powerups as the world gets made.
@@ -155,7 +156,7 @@
 		// 	Prep to draw a snake
 		// 	await context.SetLineWidthAsync(5);
 
-		// 	Select a color that hasn't been chosen before (rn its red)
+		// 	Select a color that hasn't been chosen before 
 
 		// 	await context.SetStrokeStyleAsync(network.setSnakeColor(network.colors)); Might have to change if this does not work.
 
@@ -232,7 +233,7 @@
 		// }
 
 		// finish batch drawing
-		// await context.EndBatchAsync();
+		await context.EndBatchAsync();
 
 		StateHasChanged();
 	}

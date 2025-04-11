@@ -7,8 +7,19 @@
     /// </summary>
     public class World
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public Dictionary<int, Snake> snakes = new Dictionary<int, Snake>();
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Dictionary<int, ObstacleWall> walls = new Dictionary<int, ObstacleWall>();
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Dictionary<int, Powerup> powerups = new Dictionary<int, Powerup>();
 
         /// <summary>
@@ -37,9 +48,25 @@
             this.Size = 1000;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="size"></param>
+        public World(int size)
+        {
+            this.Size = size;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="world"></param>
         public World(World world)
         {
             this.Size = world.Size;
+            this.snakes = world.snakes;
+            this.powerups = world.powerups;
+            this.walls = world.walls;
         }
     }
 }
