@@ -13,9 +13,10 @@
 
 <PageTitle> Snake </PageTitle>
 <img @ref="backgroundImage" id="bgImage" src="images/Background.png" alt="image" style="display:none;" />
-<img @ref="SpaceImage" id="bgImage" src="images/Space Background.jpg" alt="image" style="display:none;" />
-<img @ref="ForestImage" id="bgImage" src="images/Forest Floor Background.jpg" alt="image" style="display:none;" />
-<img @ref="DesertImage" id="bgImage" src="images/Desert Background.jpg" alt="image" style="display:none;" />
+<img @ref="SpaceImage" id="sImage" src="images/Space Background.jpg" alt="image" style="display:none;" />
+<img @ref="ForestImage" id="fImage" src="images/Forest Floor Background.jpg" alt="image" style="display:none;" />
+<img @ref="DesertImage" id="dImage" src="images/Desert Background.jpg" alt="image" style="display:none;" />
+<img @ref="wallImage" id="wImage" src="images/WallSprite.png" alt="image" style="display:none;" />
 
 <div class="input-row">
 	<label for="url"> Server Address: </label>
@@ -81,6 +82,10 @@
 	private Canvas2DContext context = null!;
 	private IJSObjectReference jsModule = null!;
 	private ElementReference backgroundImage;
+	private ElementReference DesertImage;
+	private ElementReference ForestImage;
+	private ElementReference SpaceImage;
+	private ElementReference wallImage;
 	private const int ViewWidth = 1000;
 	private const int ViewHeight = 1000;
 
@@ -136,10 +141,10 @@
 
 		//Center on origin, move to center of view port
 		await context.TranslateAsync(ViewWidth / 2, ViewHeight / 2);
-		await context.TranslateAsync(-head!.x, -head.y);
+		//await context.TranslateAsync(-head!.x, -head.y);
 
 		// Draw the background:
-		//await context.DrawImageAsync(backgroundImage, -copyWorld., 0, ViewWidth, ViewHeight);
+		await context.DrawImageAsync(backgroundImage, -copyWorld.Size, 0, ViewWidth, ViewHeight);
 
 
 		// Something that draws all the walls and powerups as the world gets made.
