@@ -116,7 +116,11 @@
                     if (message != null && message.Contains("snake")) // check if the string contains the word snake
                     {
                         Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message); // deserialize the snake object
-                        SnakeGUI.TheWorld.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary
+                        if (currentSnake.ToString().Contains("\"died\":true"))
+                        {
+
+                        }
+                        SnakeGUI.TheWorld.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary or update it
                     }
                     else if (message != null && message.Contains("wall"))
                     {
@@ -126,6 +130,10 @@
                     else if (message != null && message.Contains("powerup"))
                     {
                         Powerup? currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
+                        if (currentPowerup.ToString().Contains("\"died\":true"))
+                        {
+                            SnakeGUI.TheWorld.powerups.Remove(currentPowerup.power, out currentPowerup); // Remove from the list?
+                        }
                         SnakeGUI.TheWorld.powerups[currentPowerup!.power] = currentPowerup;
                     }
                 }
