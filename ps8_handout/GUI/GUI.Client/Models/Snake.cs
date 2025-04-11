@@ -27,6 +27,11 @@ namespace GUI.Client.Models
         public List<Point2D> body {  get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public Point2D head { get; set; }
+
+        /// <summary>
         ///     The direction this snake object is traveling
         /// </summary>
         public Point2D dir { get; set; }

@@ -75,6 +75,8 @@
 	/// </summary>
 	private string UserName = "";
 
+	private Point2D head = new Point2D(1000, 1000);
+
 	private const int WorldSize = 1000;
 	//This may cause problems - review
 	public static World TheWorld = new();
@@ -141,11 +143,11 @@
 		await context.SaveAsync();
 
 		//Center on origin, move to center of view port
-		await context.TranslateAsync(ViewWidth / 2, ViewHeight / 2);
-		await context.TranslateAsync(copyWorld.snakes[0]., copyWorld.snakes.body[0].x);
+		await context.TranslateAsync( ViewWidth / 2, ViewHeight / 2);
+		//await context.TranslateAsync(-head.x, -head.y);
 
 		// Draw the background:
-		await context.DrawImageAsync(backgroundImage, -2000/2, -2000/2, 2000, 2000);
+		await context.DrawImageAsync(backgroundImage, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
 
 
 		// Something that draws all the walls and powerups as the world gets made.
@@ -186,7 +188,7 @@
 
 		// 	Have two walls: one vertical and one horizontal
 
-		foreach (ObstacleWall wall in TheWorld.walls.Values) 
+		foreach (ObstacleWall wall in copyWorld.walls.Values) 
 		{
 			// for vertical walls the x points will be the same
 
@@ -232,6 +234,7 @@
 
 		// }
 
+		await context.RestoreAsync();
 		// finish batch drawing
 		await context.EndBatchAsync();
 
@@ -246,7 +249,7 @@
 	/// </summary>
 	private void ConnectToServer()
 	{
-		new Thread(() => network.HandleConnect(UserName)).Start();
+		new Thread(() => network.HandleConnect(UserName, TheWorld)).Start();
 	}
 
 	/// <summary>

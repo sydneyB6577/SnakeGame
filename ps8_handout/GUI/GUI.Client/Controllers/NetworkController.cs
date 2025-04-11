@@ -99,12 +99,17 @@
         /// THIS IS NOT ENOUGH. the message we're receiving is line by line and each line is an object
         /// need to check if line is wall, snake, or world, then act appripriately (update the entire world). 
         /// Don't deserialize the entire world.
-        public void HandleConnect(string name)
+        public void HandleConnect(string name, World world)
         {
             connection.Connect("localhost", 11000);
             IsConnected = true;
 
             connection.Send(name);
+            int id = int.Parse(connection.ReadLine());
+            int size = int.Parse(connection.ReadLine());
+            world.Size = size;
+            world.Width = size;
+            world.Height = size;
 
             try
             {
@@ -120,21 +125,21 @@
                         {
 
                         }
-                        SnakeGUI.TheWorld.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary or update it
+                        world.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary or update it
                     }
                     else if (message != null && message.Contains("wall"))
                     {
                         ObstacleWall? currentWall = JsonSerializer.Deserialize<ObstacleWall>(message);
-                        SnakeGUI.TheWorld.walls[currentWall!.wall] = currentWall;
+                        world.walls[currentWall!.wall] = currentWall;
                     }
                     else if (message != null && message.Contains("powerup"))
                     {
                         Powerup? currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
                         if (currentPowerup.ToString().Contains("\"died\":true"))
                         {
-                            SnakeGUI.TheWorld.powerups.Remove(currentPowerup.power, out currentPowerup); // Remove from the list?
+                            world.powerups.Remove(currentPowerup.power, out currentPowerup); // Remove from the list?
                         }
-                        SnakeGUI.TheWorld.powerups[currentPowerup!.power] = currentPowerup;
+                        world.powerups[currentPowerup!.power] = currentPowerup;
                     }
                 }
             }

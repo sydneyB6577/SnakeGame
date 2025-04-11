@@ -26,19 +26,19 @@
         /// The size of a single side of the square world
         /// </summary>
         public int Size
-        { get; private set; }
+        { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         public int Width
-            { get; private set; }
+            { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         public int Height 
-            { get; private set; }
+            { get; set; }
 
         /// <summary>
         /// 
@@ -64,6 +64,8 @@
         public World(World world)
         {
             this.Size = world.Size;
+            this.Width = world.Width;
+            this.Height = world.Height;
             this.snakes = world.snakes;
             this.powerups = world.powerups;
             this.walls = world.walls;
