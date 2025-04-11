@@ -32,6 +32,11 @@ namespace GUI.Client.Models
         public Point2D head { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public Point2D tail { get; set; }
+
+        /// <summary>
         ///     The direction this snake object is traveling
         /// </summary>
         public Point2D dir { get; set; }
@@ -69,6 +74,8 @@ namespace GUI.Client.Models
             this.snake = 0;
             this.name = string.Empty;
             this.body = new List<Point2D>();
+            this.head = new Point2D();
+            this.tail = new Point2D();
             this.dir = new Point2D();
             this.score = 0;
             this.died = false;

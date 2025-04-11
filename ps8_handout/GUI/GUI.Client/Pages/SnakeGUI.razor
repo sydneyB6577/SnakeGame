@@ -151,31 +151,29 @@
 
 
 		// Something that draws all the walls and powerups as the world gets made.
+		foreach (Snake snake in copyWorld.snakes.Values)
+		{
+			//Prep to draw a snake
+			await context.SetLineWidthAsync(10);
 
+			//Select a color that hasn't been chosen before (unless there are more than 8 players)
+			await context.SetStrokeStyleAsync(network.setSnakeColor(network.colors).ToString()); // Might have to change if this does not work.
 
-		// foreach (Snake p in TheWorld.snakes.Values)
-		// {
-		// 	Prep to draw a snake
-		// 	await context.SetLineWidthAsync(10);
-
-		// 	Select a color that hasn't been chosen before 
-
-		// 	await context.SetStrokeStyleAsync(network.setSnakeColor(network.colors)); Might have to change if this does not work.
-
-		// 	Draw a snake
-		// 	await context.SetLineCapAsync(LineCap.Round);
-		// 	await context.BeginPathAsync();
-		// 	Starting location of the snake/line (tail)
-		// 	await context.MoveToAsync(50, 50);
-		// 	Ending location of the snake/line (head)
-		// 	await context.LineToAsync(100, 50);
-		// 	await context.StrokeAsync();
-		// }
+			//Draw a snake
+			await context.SetLineCapAsync(LineCap.Round);
+			await context.BeginPathAsync();
+			//Starting location of the snake/line (tail)
+			await context.MoveToAsync(snake.tail.X, snake.tail.Y);
+			//Ending location of the snake/line (head)
+			await context.LineToAsync(snake.head.X, snake.head.Y);
+			await context.StrokeAsync();
+		}
 
 		foreach (Powerup p in copyWorld.powerups.Values)
 		{
 			//smaller yellow circle for powerups
 			await context.SetLineWidthAsync(5);
+			await context.SetLineCapAsync(LineCap.Round);
 			await context.SetStrokeStyleAsync($"rgb( 255, 255, 0 )");
 			await context.BeginPathAsync();
 			await context.ArcAsync(p.loc.X, p.loc.Y, 3, 0, 2 * Math.PI);
@@ -183,52 +181,45 @@
 		}
 
 		// 	Have two walls: one vertical and one horizontal
-
 		foreach (ObstacleWall wall in copyWorld.walls.Values) 
 		{
 			// for vertical walls the x points will be the same
-
 			if (wall.p1.X == wall.p2.X) 
 			{
-				for (int i = wall.p1.Y; i < wall.p2.Y; i+= 50)
+				if(wall.p1.Y < wall.p2.Y)
 				{
-					await context.DrawImageAsync(wallImage, wall.p1.X, wall.p1.Y + i, 50, 50);
+					for (int i = wall.p1.Y; i <= wall.p2.Y; i += 50)
+					{
+						await context.DrawImageAsync(wallImage, wall.p1.X - 25, i - 25, 50, 50);
+					}
+				}
+				else
+				{
+					for(int i = wall.p2.Y; i <= wall.p1.Y; i += 50)
+					{
+						await context.DrawImageAsync(wallImage, wall.p1.X - 25, i - 25, 50, 50);
+					}
 				}
 			}
-
 			// for horizional walls the y points will be the same
-
 			if (wall.p1.Y == wall.p2.Y)
 			{
-				for (int i = wall.p1.X; i < wall.p2.X; i+= 50) 
+				if(wall.p1.X < wall.p2.X)
 				{
-					await context.DrawImageAsync(wallImage, wall.p1.X + i, wall.p1.Y, 50, 50);
+					for (int i = wall.p1.X; i <= wall.p2.X; i += 50)
+					{
+						await context.DrawImageAsync(wallImage, i - 25, wall.p1.Y - 25, 50, 50);
+					}
+				}
+				else
+				{
+					for (int i = wall.p2.X; i <= wall.p1.X; i += 50)
+					{
+						await context.DrawImageAsync(wallImage, i - 25, wall.p1.Y - 25, 50, 50);
+					}
 				}
 			}
 		}
-
-		// 	Draw walls surrounding the world
-		// 	Vertical Left
-		// 	await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
-		// 	Vertical Right
-		// 	await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
-		// 	Horizontal Top
-		// 	await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
-		// 	Horizontal Bottom
-		// 	await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
-
-		// 	Draw ___ (6? 10?) randomly placed and rotated walls in the world
-		// 	for (int i = 0; i < 3; i++)
-		// 	{
-		// 		Draw one vertical wall in a random spot
-		// 		await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
-		// 		Draw one horizontal wall in a random spot
-		// 		await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
-		// 	}
-
-		// 	figure out how to draw one wall
-
-		// }
 
 		await context.RestoreAsync();
 		// finish batch drawing
