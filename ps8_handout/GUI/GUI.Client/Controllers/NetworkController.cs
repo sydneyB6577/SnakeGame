@@ -26,7 +26,7 @@
         /// </summary>
         public NetworkConnection connection = new NetworkConnection();
         static World gameWorld = new World();
-        List<Color> colors = new List<Color>() {Color.Red, Color.Orange, Color.Yellow, Color.Green,
+        public List<Color> colors = new List<Color>() {Color.Red, Color.Orange, Color.Yellow, Color.Green,
                                                 Color.Blue, Color.Purple, Color.White, Color.Black};
 
         private int colorCounter = 0;
@@ -45,31 +45,6 @@
             connection.Disconnect();
             IsConnected = false;
         }
-
-        // A list to keep track of all of the connections made to the game server.
-        //static List<NetworkConnection> connectionList = new List<NetworkConnection>();
-
-        // A list to keep track of all the players that connect to the game server for the snake names and other properties.
-        //static Dictionary<Snake, NetworkConnection> players = new Dictionary<Snake, NetworkConnection>();
-
-        //public static void Main(string[] args)
-        //{
-        //    Server
-        //}
-
-        // methods that define up down left and right movement
-
-        // someone connecting to or exiting the game
-
-        ///// <summary>
-        ///// Method that establishes a connection to the server.
-        ///// </summary>
-        ///// <param name="handleConnect"></param>
-        ///// <param name="port"></param>
-        //public void ConnectToServer(Action<NetworkConnection> handleConnect, int port)
-        //{
-        //    connection.Connect(handleConnect, 11000);
-        //}
 
         /// <summary>
         ///     Instruction for upward movement in the game world.
@@ -118,12 +93,6 @@
 
         // Maybe make all of the movement handled in a single method to better fit JSON command movement lines.
 
-        //May not be necessary due to separation of concerns.
-        //public void playerDC(Snake snake)
-        //{
-        //snake.gameState = false;
-        //}
-
         /// <summary>
         /// 
         /// </summary>
@@ -132,15 +101,6 @@
         /// Don't deserialize the entire world.
         public void HandleConnect(string name)
         {
-            //Only adds the connection to the list if it is a new connection
-
-            //Create a variable to hold the name of the chat member/connection.
-            //Snake s = new Snake();
-
-            // NOTE: We need to have methods in here to set a name for the snake, set the localhost, and the port.
-
-            // NOTE: We call the methods in here inside the GUI.
-
             connection.Connect("localhost", 11000);
             IsConnected = true;
 
@@ -156,7 +116,11 @@
                     if (message != null && message.Contains("snake")) // check if the string contains the word snake
                     {
                         Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message); // deserialize the snake object
-                        SnakeGUI.TheWorld.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary
+                        if (currentSnake.ToString().Contains("\"died\":true"))
+                        {
+
+                        }
+                        SnakeGUI.TheWorld.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary or update it
                     }
                     else if (message != null && message.Contains("wall"))
                     {
@@ -166,20 +130,12 @@
                     else if (message != null && message.Contains("powerup"))
                     {
                         Powerup? currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
+                        if (currentPowerup.ToString().Contains("\"died\":true"))
+                        {
+                            SnakeGUI.TheWorld.powerups.Remove(currentPowerup.power, out currentPowerup); // Remove from the list?
+                        }
                         SnakeGUI.TheWorld.powerups[currentPowerup!.power] = currentPowerup;
                     }
-
-                    //If the snake is new, the first thing they type and submit is their game name.
-
-                    //Send the message (and the snake's name) to every single connected snake.
-                    //foreach (NetworkConnection socket in connectionList)
-                    //{
-                    //    //socket.Send(name + ": " + message);
-                    //    //snake info JSON
-                    //    JsonSerializer.Deserialize(message);
-
-                    //    socket.Send(JsonSerializer.Serialize(s)); //Check to make sure this is working properly
-                    //}
                 }
             }
             catch (Exception)

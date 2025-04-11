@@ -87,7 +87,7 @@ public sealed class NetworkConnection : IDisposable
         try
         {
             _tcpClient = new TcpClient();
-            _tcpClient.Connect(host, port);
+            _tcpClient.Connect(host, port); // error here
             _reader = new StreamReader(_tcpClient.GetStream(), Encoding.UTF8);
             _writer = new StreamWriter(_tcpClient.GetStream(), Encoding.UTF8) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
         }

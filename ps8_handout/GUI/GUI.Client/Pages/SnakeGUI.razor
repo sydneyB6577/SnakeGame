@@ -13,9 +13,6 @@
 
 <PageTitle> Snake </PageTitle>
 
-<div id="snakeCanvas" style="position: fixed; width: 100%; height: 100%">
-	<BECanvas Width="1000" Height="1000" @ref="canvasReference"></BECanvas>
-</div>
 <div class="input-row">
 	<label for="url"> Server Address: </label>
 	<input id="url" disabled="@network.IsConnected" type="text" @bind="ServerNameOrAddress" />
@@ -32,8 +29,13 @@
 		<button class="btn btn-primary" @onclick="ConnectToServer">Connect</button>
 	}
 </div>
+
+<div id="snakeCanvas" style="position: fixed; width: 100%; height: 100%">
+	<BECanvas Width="1000" Height="1000" @ref="canvasReference"></BECanvas>
+</div>
+
 <div class=music-adjustable>
-	<button class="btn btn-primary" @onclick="ConnectToServer">Music</button> @* Change this to just be a volume bar*@
+	@* <button class="btn btn-primary" @onclick="ConnectToServer">Music</button> @* Change this to just be a volume bar*@
 </div>
 
 <audio id="player">
@@ -65,7 +67,7 @@
 	/// <summary>
 	/// The name taken from the input box;
 	/// </summary>
-	private string UserName = "steve";
+	private string UserName = "";
 
 	private const int WorldSize = 1000;
 	//This may cause problems - review
@@ -84,7 +86,7 @@
 	/// <returns></returns>
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		if (firstRender)
+		if (firstRender && network.IsConnected)
 		{
 			jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Pages/SnakeGUI.razor.js");
 			context = await canvasReference.CreateCanvas2DAsync();
@@ -125,7 +127,7 @@
 
 		// Center on origin, move to center of view port
 		await context.TranslateAsync(ViewWidth / 2, ViewHeight / 2);
-		await context.TranslateAsync(-head!.x, -head.y);
+		// await context.TranslateAsync(-head!.x, -head.y);
 
 		// Draw the background:
 		await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
@@ -134,60 +136,62 @@
 		// Something that draws all the walls and powerups as the world gets made.
 
 
-		foreach (Snake p in TheWorld.snakes.Values)
-		{
-			//Prep to draw a snake
-			await context.SetLineWidthAsync(5);
+		// foreach (Snake p in TheWorld.snakes.Values)
+		// {
+		// 	Prep to draw a snake
+		// 	await context.SetLineWidthAsync(5);
 
-			//Select a color that hasn't been chosen before (rn its red)
+		// 	Select a color that hasn't been chosen before (rn its red)
 
-			await context.SetStrokeStyleAsync($"rgb( 255, 0, 0 )");
+		// 	await context.SetStrokeStyleAsync(network.setSnakeColor(network.colors).ToString()); Might have to change if this does not work.
 
-			//Draw a snake
-			await context.SetLineCapAsync(LineCap.Round);
-			await context.BeginPathAsync();
-			//Starting location of the snake/line (tail)
-			await context.MoveToAsync(99, 80);
-			//Ending location of the snake/line (head)
-			await context.LineToAsync(100, 50);
-			//How to determine what head and tail are? Do we change those or does the server? 
-			await context.StrokeAsync();
-		}
+		// 	Draw a snake
+		// 	await context.SetLineCapAsync(LineCap.Round);
+		// 	await context.BeginPathAsync();
+		// 	Starting location of the snake/line (tail)
+		// 	await context.MoveToAsync(50, 50);
+		// 	Ending location of the snake/line (head)
+		// 	await context.LineToAsync(100, 50);
+		// 	await context.StrokeAsync();
+		// }
 
-		foreach (Powerup p in TheWorld.powerups.Values) //Bug
-		{
-			// smaller yellow circle for powerups
-			await context.SetLineWidthAsync(5);
-			await context.SetStrokeStyleAsync($"rgb( 255, 255, 0 )");
-			await context.BeginPathAsync();
-			await context.ArcAsync(p.loc.x, p.loc.y, 3, 0, 2 * Math.PI);
-			await context.StrokeAsync();
-		}
+		// foreach (Powerup p in TheWorld.powerups.Values) Bug
+		// {
+		// 	smaller yellow circle for powerups
+		// 	await context.SetLineWidthAsync(5);
+		// 	await context.SetStrokeStyleAsync($"rgb( 255, 255, 0 )");
+		// 	await context.BeginPathAsync();
+		// 	await context.ArcAsync(p.loc.x, p.loc.y, 3, 0, 2 * Math.PI);
+		// 	await context.StrokeAsync();
+		// }
 
-		//Might not need the for-each loop because I dont need to make the walls several times.
-		foreach (ObstacleWall wall in TheWorld.walls.Values)
-		{
-			//Have two walls: one vertical and one horizontal
+		// Might not need the for-each loop because I dont need to make the walls several times.
+		// foreach (ObstacleWall wall in TheWorld.walls.Values)
+		// {
+		// 	Have two walls: one vertical and one horizontal
 
-			//Draw walls surrounding the world
-			//Vertical Left
-			await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
-			//Vertical Right
-			await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
-			//Horizontal Top
-			await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
-			//Horizontal Bottom
-			await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+		// 	Draw walls surrounding the world
+		// 	Vertical Left
+		// 	await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+		// 	Vertical Right
+		// 	await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+		// 	Horizontal Top
+		// 	await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+		// 	Horizontal Bottom
+		// 	await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
 
-			//Draw ___ (6? 10?) randomly placed and rotated walls in the world
-			for (int i = 0; i < 3; i++)
-			{
-				//Draw one vertical wall in a random spot
-				await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
-				//Draw one horizontal wall in a random spot
-				await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
-			}
-		}
+		// 	Draw ___ (6? 10?) randomly placed and rotated walls in the world
+		// 	for (int i = 0; i < 3; i++)
+		// 	{
+		// 		Draw one vertical wall in a random spot
+		// 		await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+		// 		Draw one horizontal wall in a random spot
+		// 		await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
+		// 	}
+
+		// 	figure out how to draw one wall
+
+		// }
 
 		// finish batch drawing
 		await context.EndBatchAsync();
@@ -222,28 +226,31 @@
 	[JSInvokable]
 	public void HandleKeyPress(string key)
 	{
-		key = key.ToLower();
-		// TODO: Once the client is connected and the handshake is complete,
-		//       invoke some controller method to send the appropriate command to the server
-		if (key.Equals("w")) /*Keep track of the axis*/
+		if (network.IsConnected)
 		{
-			network.moveUP();
-		}
-		else if (key.Equals("a")) /*Keep track of the axis*/
-		{
-			network.moveLEFT();
-		}
-		else if (key.Equals("s")) /*Keep track of the axis*/
-		{
-			network.moveRIGHT();
-		}
-		else if (key.Equals("d")) /*Keep track of the axis*/
-		{
-			network.moveDOWN();
-		}
+			key = key.ToLower();
+			// TODO: Once the client is connected and the handshake is complete,
+			//       invoke some controller method to send the appropriate command to the server
+			if (key.Equals("w")) /*Keep track of the axis*/
+			{
+				network.moveUP();
+			}
+			else if (key.Equals("a")) /*Keep track of the axis*/
+			{
+				network.moveLEFT();
+			}
+			else if (key.Equals("s")) /*Keep track of the axis*/
+			{
+				network.moveRIGHT();
+			}
+			else if (key.Equals("d")) /*Keep track of the axis*/
+			{
+				network.moveDOWN();
+			}
 
-		// TODO: Remove this, which is just here to show you what the 'key' string is for whatever key you pressed
-		Debug.WriteLine("key pressed: " + key);
+			// TODO: Remove this, which is just here to show you what the 'key' string is for whatever key you pressed
+			Debug.WriteLine("key pressed: " + key);
+		}
 	}
 }
 

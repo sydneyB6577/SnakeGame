@@ -11,9 +11,9 @@
 <div id="ConnectionInputs">
     <div class="input-row">
         <label for="url"> Server Address: </label>
-        <input id="url" disabled="@network.IsConnected" type="text" @bind="ServerNameOrAddress" />
+        <input id="url" disabled="@network.!IsConnected" type="text" @bind="ServerNameOrAddress" />
         <label for="url"> Port: </label>
-        <input id="port" disabled="@network.IsConnected" type="number" @bind="ServerPort" class="port" />
+        <input id="port" disabled="@network.!IsConnected" type="number" @bind="ServerPort" class="port" />
         @if ( network.IsConnected )
         {
             <button class="btn btn-primary" @onclick="DisconnectFromServer">Disconnect</button>
