@@ -13,6 +13,7 @@
 
 <PageTitle> Snake </PageTitle>
 <img @ref="backgroundImage" id="bgImage" src="images/Background.png" alt="image" style="display:none;" />
+<img @ref="wallImage" id="wImage" src="images/WallSprite.png" alt="image" style="display:none;" />
 
 <div class="input-row">
 	<label for="url"> Server Address: </label>
@@ -83,6 +84,7 @@
 	private Canvas2DContext context = null!;
 	private IJSObjectReference jsModule = null!;
 	private ElementReference backgroundImage;
+	private ElementReference wallImage;
 	private const int ViewWidth = 1000;
 	private const int ViewHeight = 1000;
 
@@ -122,22 +124,26 @@
 	/// <returns></returns>
 	private async Task DrawFrame()
 	{
-		// await context.BeginBatchAsync();
+		World copyWorld;
+		lock(TheWorld) {
+			copyWorld = new(TheWorld);
+		}
+		await context.BeginBatchAsync();
 
 		// clip the view so that objects drawn outside the canvas will not be shown
-		// await context.BeginPathAsync();
-		// await context.RectAsync(0, 0, ViewWidth, ViewHeight);
-		// await context.ClipAsync();
+		await context.BeginPathAsync();
+		await context.RectAsync(0, 0, ViewWidth, ViewHeight);
+		await context.ClipAsync();
 
 		// // Because we are modifying the transformation matrix, we need to save it so we can restore it at the end
-		// await context.SaveAsync();
+		await context.SaveAsync();
 
-		// Center on origin, move to center of view port
-		// await context.TranslateAsync(ViewWidth / 2, ViewHeight / 2);
-		// await context.TranslateAsync(-head!.x, -head.y);
+		//Center on origin, move to center of view port
+		await context.TranslateAsync(ViewWidth / 2, ViewHeight / 2);
+		await context.TranslateAsync(-head!.x, -head.y);
 
 		// Draw the background:
-		await context.DrawImageAsync(backgroundImage, 0, 0, ViewWidth, ViewHeight);
+		//await context.DrawImageAsync(backgroundImage, -copyWorld., 0, ViewWidth, ViewHeight);
 
 
 		// Something that draws all the walls and powerups as the world gets made.
@@ -178,7 +184,28 @@
 
 		// 	Have two walls: one vertical and one horizontal
 
+		foreach (ObstacleWall wall in TheWorld.walls.Values) 
+		{
+			// for vertical walls the x points will be the same
 
+			if (wall.p1.x == wall.p2.x) 
+			{
+				for (int i = wall.p1.y; i < wall.p2.y; i+= 50)
+				{
+					await context.DrawImageAsync(wallImage, wall.p1.x, wall.p1.y + i, 50, 50);
+				}
+			}
+
+			// for horizional walls the y points will be the same
+
+			if (wall.p1.y == wall.p2.y)
+			{
+				for (int i = wall.p1.x; i < wall.p2.x; i+= 50) 
+				{
+					await context.DrawImageAsync(wallImage, wall.p1.x + i, wall.p1.y, 50, 50);
+				}
+			}
+		}
 
 		// 	Draw walls surrounding the world
 		// 	Vertical Left

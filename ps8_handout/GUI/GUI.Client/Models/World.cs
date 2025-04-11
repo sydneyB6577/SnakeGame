@@ -37,12 +37,9 @@
             this.Size = 1000;
         }
 
-        //public World(int x, int y)
-        //{
-        //    this.worldTopDimention = x;
-        //    this.worldBottomDimention = -x;
-        //    this.worldLeftDimention = -y;
-        //    this.worldRightDimention = y;
-        //}
+        public World(World world)
+        {
+            this.Size = world.Size;
+        }
     }
 }
