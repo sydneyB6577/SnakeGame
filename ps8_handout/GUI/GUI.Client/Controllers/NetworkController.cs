@@ -132,7 +132,7 @@
                         ObstacleWall? currentWall = JsonSerializer.Deserialize<ObstacleWall>(message);
                         world.walls[currentWall!.wall] = currentWall;
                     }
-                    else if (message != null && message.Contains("powerup"))
+                    else if (message != null && message.Contains("power"))
                     {
                         Powerup? currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
                         if (currentPowerup.ToString().Contains("\"died\":true"))

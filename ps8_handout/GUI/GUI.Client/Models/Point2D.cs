@@ -11,12 +11,12 @@
         /// <summary>
         /// 
         /// </summary>
-        public int x;
+        public int X { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public int y;
+        public int Y { get; set; }
 
         /// <summary>
         /// 
@@ -33,8 +33,8 @@
         /// <param name="y"></param>
         public Point2D(int x, int y)
         {
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
         }
 
         /// <summary>
@@ -44,8 +44,8 @@
         /// <param name="y"></param>
         public void setPoint(int x, int y)
         {
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
         }
 
         /// <summary>
