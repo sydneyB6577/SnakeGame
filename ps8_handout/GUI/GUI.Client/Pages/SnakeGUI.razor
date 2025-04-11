@@ -32,6 +32,7 @@
 		<button class="btn btn-primary" @onclick="ConnectToServer">Connect</button>
 	}
 </div>
+
 <div class=music-adjustable>
 	<button class="btn btn-primary" @onclick="ConnectToServer">Music</button> @* Change this to just be a volume bar*@
 </div>
@@ -65,7 +66,7 @@
 	/// <summary>
 	/// The name taken from the input box;
 	/// </summary>
-	private string UserName = "steve";
+	private string UserName = "";
 
 	/// <summary>
 	///     The first point object in a Snake's body list.
@@ -95,7 +96,7 @@
 			context = await canvasReference.CreateCanvas2DAsync();
 			await JsRuntime.InvokeAsync<object>("initRenderJS", DotNetObjectReference.Create(this));
 
-			GameLoop();
+			// GameLoop();
 		}
 	}
 
@@ -130,7 +131,7 @@
 
 		// Center on origin, move to center of view port
 		await context.TranslateAsync(ViewWidth / 2, ViewHeight / 2);
-		await context.TranslateAsync(-head!.x, -head.y);
+		// await context.TranslateAsync(-head!.x, -head.y);
 
 		// Draw the background:
 		await context.DrawImageAsync(backgroundImage, -TheWorld.Width / 2, -TheWorld.Height / 2, TheWorld.Width, TheWorld.Height);
