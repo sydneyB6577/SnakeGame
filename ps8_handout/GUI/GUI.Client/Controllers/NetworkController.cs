@@ -26,7 +26,7 @@
         /// </summary>
         public NetworkConnection connection = new NetworkConnection();
         static World gameWorld = new World();
-        List<Color> colors = new List<Color>() {Color.Red, Color.Orange, Color.Yellow, Color.Green,
+        public List<Color> colors = new List<Color>() {Color.Red, Color.Orange, Color.Yellow, Color.Green,
                                                 Color.Blue, Color.Purple, Color.White, Color.Black};
 
         private int colorCounter = 0;

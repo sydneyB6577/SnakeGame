@@ -146,7 +146,7 @@
 
 			//Select a color that hasn't been chosen before (rn its red)
 
-			await context.SetStrokeStyleAsync($"rgb( 255, 0, 0 )");
+			await context.SetStrokeStyleAsync(network.setSnakeColor(network.colors).ToString()); // Might have to change if this does not work.
 
 			//Draw a snake
 			await context.SetLineCapAsync(LineCap.Round);
