@@ -9,7 +9,6 @@
     using System.Text.Json;
     using System.Xml.Linq;
     using CS3500.Networking;
-    using global::CS3500.Networking;
     using GUI.Client.Models;
     using GUI.Client.Pages;
 
@@ -34,6 +33,9 @@
                                                 Color.Blue, Color.Purple, Color.White, Color.Black};
 
         private int colorCounter = 0;
+
+        private string snakeString = string.Empty;
+        private string powerupName = string.Empty;
 
         /// <summary>
         ///     Determines whether the user is connected or not. 

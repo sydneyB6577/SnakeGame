@@ -35,18 +35,13 @@
 	}
 </div>
 
+<button class="btn btn-primary" @onclick="ConnectToServer">Desert</button>
+<button class="btn btn-primary" @onclick="ConnectToServer">Forest</button>
+<button class="btn btn-primary" @onclick="ConnectToServer">Space</button>
+
 <div id="snakeCanvas" style="position: fixed; width: 100%; height: 100%">
 	<BECanvas Width="1000" Height="1000" @ref="canvasReference"></BECanvas>
 </div>
-
-<div class=music-adjustable>
-	@* <button class="btn btn-primary" @onclick="ConnectToServer">Music</button> @* Change this to just be a volume bar*@
-</div>
-
-
-<audio id="player">
-	<source id="playerSource" src="" />
-</audio>
 
 @code
 {
@@ -76,6 +71,7 @@
 	private string UserName = "";
 
 	private Point2D head = new Point2D(1000, 1000);
+	private Point2D tail = new Point2D(1000, 1000);
 
 	private const int WorldSize = 1000;
 	//This may cause problems - review
@@ -88,6 +84,7 @@
 	private ElementReference ForestImage;
 	private ElementReference SpaceImage;
 	private ElementReference wallImage;
+	private ElementReference ImageSelection;
 	private const int ViewWidth = 1000;
 	private const int ViewHeight = 1000;
 
@@ -147,7 +144,7 @@
 		//await context.TranslateAsync(-head.x, -head.y);
 
 		// Draw the background:
-		await context.DrawImageAsync(backgroundImage, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
+		await context.DrawImageAsync(ImageSelection, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
 
 
 		// Something that draws all the walls and powerups as the world gets made.
@@ -163,9 +160,9 @@
 			await context.SetLineCapAsync(LineCap.Round);
 			await context.BeginPathAsync();
 			//Starting location of the snake/line (tail)
-			await context.MoveToAsync(snake.tail.X, snake.tail.Y);
+			await context.MoveToAsync(50,100);
 			//Ending location of the snake/line (head)
-			await context.LineToAsync(snake.head.X, snake.head.Y);
+			await context.LineToAsync(150, 200);
 			await context.StrokeAsync();
 		}
 
@@ -280,6 +277,21 @@
 			// TODO: Remove this, which is just here to show you what the 'key' string is for whatever key you pressed
 			Debug.WriteLine("key pressed: " + key);
 		}
+	}
+
+	private void setDesertBackground()
+	{
+		ImageSelection = DesertImage;
+	}
+
+	private void setForestBackground()
+	{
+		ImageSelection = ForestImage;
+	}
+
+	private void setSpaceBackground()
+	{
+		ImageSelection = SpaceImage;
 	}
 }
 
