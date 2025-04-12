@@ -22,7 +22,9 @@
         /// </summary>
         public Dictionary<int, Powerup> powerups = new Dictionary<int, Powerup>();
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public int currentPlayerID;
 
         /// <summary>
@@ -85,6 +87,10 @@
             return snakes[currentPlayerID].body.Last();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="playerID"></param>
         public void setCurrentPlayerID(int playerID)
         {
             currentPlayerID = playerID;

@@ -10,11 +10,6 @@ namespace GUI.Client.Models
     public class Snake
     {
         /// <summary>
-        /// 
-        /// </summary>
-        public List<string> colors = new List<string>(){"red", "orange", "yellow", "green", "blue", "purple", "black", "white"};
-
-        /// <summary>
         ///     The ID of this snake object
         /// </summary>
         public int snake { get; set; }
@@ -79,20 +74,10 @@ namespace GUI.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string color { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<string> colors = new List<string>() {"red", "orange", "yellow", "green",
-                                                "blue", "purple", "white", "black"};
-
-        /// <summary>
-        /// 
-        /// </summary>
         public Snake()
         {
             this.snake = 0;
+            this.color = string.Empty;
             this.name = string.Empty;
             this.body = new List<Point2D>();
             this.head = new Point2D();

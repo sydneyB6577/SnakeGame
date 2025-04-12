@@ -27,10 +27,6 @@
         static World gameWorld = new World();
 
         private int colorCounter;
-        /// 
-                                                Color.Blue, Color.Purple, Color.White, Color.Black};
-
-        private int colorCounter = 0;
 
         /// <summary>
         ///     Determines whether the user is connected or not. 
@@ -78,33 +74,7 @@
         {
             connection.Send("{\"moving\":\"right\"}");
         }
-
-        /// <summary>
-        ///     Sets the snake to a new color for the first 8 snakes. After that, the colors are repeated.
-        /// </summary>
-        /// <param name="colors">A list of colors the method can choose from.</param>
-        /// <returns>The color of the new snake.</returns>
-        public string setSnakeColor(Snake snake, List<string> colors)
-        {
-            string playerColor = colors[colorCounter];
-            colorCounter++;
-            colorCounter %= colors.Count;
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="colors"></param>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public void setColor(List<string> colors, Snake s)
-        {
-            if(s.color == null)
-            {
-                s.color = colors[colorCounter++];
-            }
-        }
-            snake.color = playerColor;
-            return playerColor;
-        }
+        
 
         // Maybe make all of the movement handled in a single method to better fit JSON command movement lines.
 
@@ -127,6 +97,13 @@
             world.Width = size;
             world.Height = size;
 
+            Random rnd = new Random();
+            int r = rnd.Next(0, 255);
+            int g = rnd.Next(0, 255);
+            int b = rnd.Next(0, 255);
+
+            string s = "rgb(" + r + ", " + g + ", " + b + " )";
+
             try
             {
                 while (true)
@@ -137,6 +114,7 @@
                     if (message != null && message.Contains("snake")) // check if the string contains the word snake
                     {
                         Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message); // deserialize the snake object
+                        currentSnake!.color = s;
                         if (currentSnake.ToString().Contains("\"died\":true"))
                         {
                             world.snakes.Remove(currentSnake.snake, out currentSnake);
