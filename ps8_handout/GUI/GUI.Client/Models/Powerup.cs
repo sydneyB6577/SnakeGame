@@ -24,7 +24,7 @@
         public bool died { get; set; }
 
         /// <summary>
-        /// 
+        ///     The default Powerup constructor the JSON strings can interact with
         /// </summary>
         public Powerup()
         {
@@ -32,16 +32,5 @@
             this.loc = new Point2D(0, 0);
             this.died = true;
         }
-        //public Powerup(int id, Point2D point)
-        //{
-        //    _powerID = id;
-        //    this._spawnPoint = point;
-        //    this.gameState = true;
-        //}
-
-        //public void consumePowerup()
-        //{
-        //    this.gameState = false;
-        //}
     }
 }
