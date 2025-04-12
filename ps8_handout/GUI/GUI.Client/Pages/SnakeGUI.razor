@@ -47,52 +47,58 @@
 
 @code
 {
+	/// <summary>
+	///		An empty SnakeGUI constructor that takes no parameters.
+	/// </summary>
 	public SnakeGUI()
 	{
-		//Do we even put anything in here?
 	}
 
 	/// <summary>
-	/// Default server name
+	///		The default server name.
 	/// </summary>
 	private string ServerNameOrAddress = "localhost";
 
 	/// <summary>
-	/// Default server port
+	///		The default server port number.
 	/// </summary>
 	private int ServerPort = 11000;
 
 	/// <summary>
-	/// The NetworkController object representing a connection with the server
+	///		The NetworkController object representing a connection with the server.
 	/// </summary>
 	private NetworkController network = new();
 
 	/// <summary>
-	/// The name taken from the input box;
+	///		The name taken from the input box.
 	/// </summary>
 	private string UserName = "";
 
-	private Point2D head = new Point2D();
-	private Point2D tail = new Point2D();
-
-	private const int WorldSize = 0;
-	//This may cause problems - review
+	//Variables to instantiate the world.
 	public World TheWorld = new();
+
+	//Components to draw the GUI.
 	private BECanvasComponent canvasReference = null!;
 	private Canvas2DContext context = null!;
 	private IJSObjectReference jsModule = null!;
+
+	//ElementReferences for all the images used.
 	private ElementReference backgroundImage;
 	private ElementReference DesertImage;
 	private ElementReference ForestImage;
 	private ElementReference SpaceImage; 
 	private ElementReference wallImage;
+
+	//Width and height of the user's view.
 	private const int ViewWidth = 1000;
 	private const int ViewHeight = 1000;
+
+	//Variable to control the background image selection.
 	private int background = 0;
-	private int colorCount = 0;
 
 	/// <summary>
-	///
+	///		Called after the page is rendered. This is used to know when the first page load
+	///		has occurred so the program can initialize various data and start the server and drawing loops.
 	/// </summary>
 	/// <param name="firstRender"></param>
 	/// <returns></returns>
@@ -127,7 +133,7 @@
 	/// <returns></returns>
 	private async Task DrawFrame()
 	{
-
+		//Makes a copy of the world so that the game can run without race conditions.
 		World copyWorld;
 		lock(TheWorld) {
 			copyWorld = new(TheWorld);
@@ -142,23 +148,24 @@
 
 		await context.BeginBatchAsync();
 
+		//Draws the game background outside the arena.
 		await context.FillRectAsync(0, 0, 1000, 1000);
 		await context.SetFillStyleAsync("lightblue");
 
 
-		// clip the view so that objects drawn outside the canvas will not be shown
+		//Clip the view so that objects drawn outside the canvas will not be shown.
 		await context.BeginPathAsync();
 		await context.RectAsync(0, 0, ViewWidth, ViewHeight);
 		await context.ClipAsync();
 
-		// // Because we are modifying the transformation matrix, we need to save it so we can restore it at the end
+		//Because the code is modifying the transformation matrix, it needs to be save so it can be restored at the end.
 		await context.SaveAsync();
 
-		//Center on origin, move to center of view port
+		//Center on origin, move to center of view port.
 		await context.TranslateAsync( ViewWidth / 2, ViewHeight / 2);
 		await context.TranslateAsync(-copyWorld.getPlayerHead().X, -copyWorld.getPlayerHead().Y);
 
-		// Draw the background:
+		//Draw the background based on which button is pushed.
 		if(background == 1)
 		{
 			await context.DrawImageAsync(DesertImage, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
@@ -176,32 +183,16 @@
 			await context.DrawImageAsync(backgroundImage, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
 		}
 
-		// Something that draws all the walls and powerups as the world gets made.
+		//Draws each snake in the arena.
 		foreach (Snake snake in copyWorld.snakes.Values)
 		{
-			Random rnd = new Random();
-			int r = rnd.Next(0, 255);
-			int g = rnd.Next(0, 255);
-			int b = rnd.Next(0, 255);
-
-			string s = "rgb(" + r + ", " + g + ", " + b + " )";
-
-			if (snake.color == string.Empty)
-			{
-				snake.color = s;
-			}
-
-			//Prep to draw a snake
+			//Prep to draw a snake.
 			await context.SetLineWidthAsync(10);
 
-			//Select a color that hasn't been chosen before (unless there are more than 8 players)
+			//Select a color that hasn't been chosen before.
 			await context.SetStrokeStyleAsync(snake.color);
 
-			//Draw a snake
-
-			// draw code loop for each point in the snake body
-			// move to the tail first
-			// line to async
+			//Draw code loop for each point in the snake body; move to the tail first.
 			await context.SetLineCapAsync(LineCap.Round);
 			await context.SetLineWidthAsync(10);
 			await context.SetLineJoinAsync(LineJoin.Round);
@@ -215,12 +206,13 @@
 			await context.StrokeAsync();
 		}
 
+		//Draws all the walls and powerups as the world gets made.
 		foreach (Powerup p in copyWorld.powerups.Values)
 		{
-			//smaller yellow circle for powerups
+			//Draws a smaller yellow circle for powerups.
 			if (!p.died)
 			{
-				await context.SetLineWidthAsync(5);
+				await context.SetLineWidthAsync(16);
 				await context.SetLineCapAsync(LineCap.Round);
 				await context.SetStrokeStyleAsync($"rgb( 255, 255, 0 )");
 				await context.BeginPathAsync();
@@ -229,10 +221,10 @@
 			}
 		}
 
-		// 	Have two walls: one vertical and one horizontal
+		//Have two walls: one vertical and one horizontal.
 		foreach (ObstacleWall wall in copyWorld.walls.Values) 
 		{
-			// for vertical walls the x points will be the same
+			//For vertical walls, the x points will be the same.
 			if (wall.p1.X == wall.p2.X) 
 			{
 				if(wall.p1.Y < wall.p2.Y)
@@ -250,7 +242,7 @@
 					}
 				}
 			}
-			// for horizional walls the y points will be the same
+			//For horizional walls, the y points will be the same.
 			if (wall.p1.Y == wall.p2.Y)
 			{
 				if(wall.p1.X < wall.p2.X)
@@ -269,8 +261,8 @@
 				}
 			}
 		}
-
 		await context.RestoreAsync();
+
 		// finish batch drawing
 		await context.EndBatchAsync();
 
@@ -278,10 +270,10 @@
 	}
 
 	/// <summary>
-	/// Handler for the connect button
-	/// Attempt to connect to the server, then start an asynchronous loop
-	/// to receive and display messages.
-	/// Called only when you click the connect button.
+	///		Handler for the connect button
+	///		Attempt to connect to the server, then start an asynchronous loop
+	///		to receive and send messages.
+	///		Called only when the user clicks the connect button.
 	/// </summary>
 	private void ConnectToServer()
 	{
@@ -289,7 +281,9 @@
 	}
 
 	/// <summary>
-	///     Disconnects the user from the server.
+	///     Handler for the disconnect button
+	///		Disconnects the user from the server.
+	///		Called only when the user clicks the connect button while already connected.
 	/// </summary>
 	private void DisconnectFromServer()
 	{
@@ -300,47 +294,53 @@
 	///     When the user presses a specific key on the keyboard, the snake on the screen
 	///     asks the server to move.
 	/// </summary>
-	/// <param name="key"></param>
+	/// <param name="key">The key the user presses to ptentially move the snake.</param>
 	[JSInvokable]
 	public void HandleKeyPress(string key)
 	{
 		if (network.IsConnected)
 		{
+			//Makes the awsd keys always lowercase, so they can be used even in caps lock.
 			key = key.ToLower();
-			// TODO: Once the client is connected and the handshake is complete,
-			//       invoke some controller method to send the appropriate command to the server
-			if (key.Equals("w")) /*Keep track of the axis*/
+
+			if (key.Equals("w")) 
 			{
 				network.moveUP();
 			}
-			else if (key.Equals("a")) /*Keep track of the axis*/
+			else if (key.Equals("a")) 
 			{
 				network.moveLEFT();
 			}
-			else if (key.Equals("s")) /*Keep track of the axis*/
+			else if (key.Equals("s")) 
 			{
 				network.moveDOWN();
 			}
-			else if (key.Equals("d")) /*Keep track of the axis*/
+			else if (key.Equals("d")) 
 			{
 				network.moveRIGHT();
 			}
-
-			// TODO: Remove this, which is just here to show you what the 'key' string is for whatever key you pressed
-			Debug.WriteLine("key pressed: " + key);
 		}
 	}
 
+	/// <summary>
+	///		This class sets the desert background when the Desert button is clicked.
+	/// </summary>
 	private void setBackground1()
 	{
 		background = 1;
 	}
 
+	/// <summary>
+	///		This class sets the forest background when the Forest button is clicked.
+	/// </summary>
 	private void setBackground2()
 	{
 		background = 2;
 	}
 
+	/// <summary>
+	///		This class sets the space background when the space button is clicked.
+	/// </summary>
 	private void setBackground3()
 	{
 		background = 3;
