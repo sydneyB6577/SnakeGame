@@ -1,6 +1,5 @@
 ﻿namespace GUI.Client.Controllers
 {
-
     using System.Data;
     using System.Drawing;
     using System.Net.NetworkInformation;
@@ -155,5 +154,4 @@
         }
     }
 }
-//}
 
