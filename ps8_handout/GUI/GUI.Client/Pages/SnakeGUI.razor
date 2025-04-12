@@ -171,6 +171,7 @@
 			await context.SetLineWidthAsync(10);
 
 			//Select a color that hasn't been chosen before (unless there are more than 8 players)
+
 			await context.SetStrokeStyleAsync("red"); // Might have to change if this does not work.
 
 			//Draw a snake
@@ -188,6 +189,8 @@
 				await context.LineToAsync(snake.body[i].X, snake.body[i].Y);
 			}
 			await context.StrokeAsync();
+			await context.FillTextAsync("name: " + snake.name + " score: " + snake.score.ToString(), snake.head.X + 20, snake.head.Y + 20, 100);
+			// await context.RectAsync();
 		}
 
 		foreach (Powerup p in copyWorld.powerups.Values)
