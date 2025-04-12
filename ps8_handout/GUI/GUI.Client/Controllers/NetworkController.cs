@@ -24,6 +24,8 @@
         /// <summary>
         ///     
         /// </summary>
+        
+        List<NetworkConnection> clients = new List<NetworkConnection>();
         public NetworkConnection connection = new NetworkConnection();
         static World gameWorld = new World();
 
@@ -114,6 +116,12 @@
         public async void HandleConnect(string name, World world)
         {
             connection.Connect("localhost", 11000);
+
+            if(!clients.Contains(connection))
+            {
+                clients.Add(connection);
+            }
+
             IsConnected = true;
 
             connection.Send(name);
@@ -124,47 +132,47 @@
             world.Width = size;
             world.Height = size;
 
-            try
-            {
-                while (true)
+                try
                 {
-                    //Read the message from the name box
-                    var message = connection.ReadLine(); // world object
+                    while (true)
+                    {
+                        //Read the message from the name box
+                        var message = connection.ReadLine(); // world object
 
-                    if (message != null && message.Contains("snake")) // check if the string contains the word snake
-                    {
-                        Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message); // deserialize the snake object
-                        if (currentSnake.ToString().Contains("\"died\":true"))
+                        if (message != null && message.Contains("snake")) // check if the string contains the word snake
                         {
-                            world.snakes.Remove(currentSnake.snake, out currentSnake);
-                            Thread.Sleep(40);
+                            Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message); // deserialize the snake object
+                            if (currentSnake.ToString().Contains("\"died\":true"))
+                            {
+                                world.snakes.Remove(currentSnake.snake, out currentSnake);
+                                Thread.Sleep(40);
+                            }
+                            world.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary or update it
                         }
-                        world.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary or update it
-                    }
-                    else if (message != null && message.Contains("wall"))
-                    {
-                        ObstacleWall? currentWall = JsonSerializer.Deserialize<ObstacleWall>(message);
-                        world.walls[currentWall!.wall] = currentWall;
-                    }
-                    else if (message != null && message.Contains("power"))
-                    {
-                        Powerup? currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
-                        if (currentPowerup.ToString().Contains("\"died\":true"))
+                        else if (message != null && message.Contains("wall"))
                         {
-                            world.powerups.Remove(currentPowerup.power, out currentPowerup); // Remove from the list?
+                            ObstacleWall? currentWall = JsonSerializer.Deserialize<ObstacleWall>(message);
+                            world.walls[currentWall!.wall] = currentWall;
                         }
-                        world.powerups[currentPowerup!.power] = currentPowerup;
+                        else if (message != null && message.Contains("power"))
+                        {
+                            Powerup? currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
+                            if (currentPowerup.ToString().Contains("\"died\":true"))
+                            {
+                                world.powerups.Remove(currentPowerup.power, out currentPowerup); // Remove from the list?
+                            }
+                            world.powerups[currentPowerup!.power] = currentPowerup;
+                        }
                     }
                 }
-            }
-            catch (Exception)
-            {
-                //If the chat member has disconnected from the chat, remove them from the dictionary.
-                DisconnectServer();
-                //throw new Exception("YOU CAN'T DO THAT!");
+                catch (Exception)
+                {
+                    //If the chat member has disconnected from the chat, remove them from the dictionary.
+                    DisconnectServer();
+                    //throw new Exception("YOU CAN'T DO THAT!");
+                }
             }
         }
     }
-}
 //}
 

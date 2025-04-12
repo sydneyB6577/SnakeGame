@@ -35,9 +35,9 @@
 	}
 </div>
 
-<button class="btn btn-primary" @onclick="setDesertBackground">Desert</button> 
-<button class="btn btn-primary" @onclick="setForestBackground">Forest</button> 
-<button class="btn btn-primary" @onclick="setSpaceBackground">Space</button> 
+<button class="btn btn-primary" @onclick="setBackground1">Desert</button> 
+<button class="btn btn-primary" @onclick="setBackground2">Forest</button> 
+<button class="btn btn-primary" @onclick="setBackground3">Space</button> 
 
 
 <div id="snakeCanvas" style="position: fixed; width: 100%; height: 100%">
@@ -84,10 +84,11 @@
 	private ElementReference DesertImage;
 	private ElementReference ForestImage;
 	private ElementReference SpaceImage;
-	private ElementReference ImageSelection; 
 	private ElementReference wallImage;
 	private const int ViewWidth = 1000;
 	private const int ViewHeight = 1000;
+	private int background = 0;
+	private int colorCount = 0;
 
 	/// <summary>
 	///
@@ -131,16 +132,12 @@
 			copyWorld = new(TheWorld);
 		}
 
-
-
-
 		if (!copyWorld.snakes.ContainsKey(copyWorld.currentPlayerID))
 		{
 			await context.BeginBatchAsync();
 			await context.EndBatchAsync();
 			return;
 		}
-
 
 		await context.BeginBatchAsync();
 
@@ -160,13 +157,26 @@
 		await context.TranslateAsync( ViewWidth / 2, ViewHeight / 2);
 		await context.TranslateAsync(-copyWorld.getPlayerHead().X, -copyWorld.getPlayerHead().Y);
 
-		// Draw the background:
-		await context.DrawImageAsync(backgroundImage, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
-
+		if(background == 1)
+		{
+			await context.DrawImageAsync(DesertImage, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
+		}
+		else if (background == 2)
+		{
+			await context.DrawImageAsync(ForestImage, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
+		}
+		else if (background == 3)
+		{
+			await context.DrawImageAsync(SpaceImage, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
+		}
+		else
+		{
+			await context.DrawImageAsync(backgroundImage, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
+		}
 
 		// Something that draws all the walls and powerups as the world gets made.
 		foreach (Snake snake in copyWorld.snakes.Values)
-		{
+		{	
 			//Prep to draw a snake
 			await context.SetLineWidthAsync(10);
 
@@ -309,20 +319,19 @@
 		}
 	}
 
-	private void setDesertBackground()
+	private void setBackground1()
 	{
-		ImageSelection = DesertImage;
+		background = 1;
 	}
 
-	private void setForestBackground()
+	private void setBackground2()
 	{
-		ImageSelection = ForestImage;
+		background = 2;
 	}
 
-	private void setSpaceBackground()
+	private void setBackground3()
 	{
-		ImageSelection = SpaceImage;
+		background = 3;
 	}
-
 }
 

@@ -83,6 +83,7 @@ namespace GUI.Client.Models
         public Snake()
         {
             this.snake = 0;
+            this.color = string.Empty;
             this.name = string.Empty;
             this.body = new List<Point2D>();
             this.head = new Point2D();
