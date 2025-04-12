@@ -22,6 +22,9 @@
         /// </summary>
         public Dictionary<int, Powerup> powerups = new Dictionary<int, Powerup>();
 
+
+        public int currentPlayerID;
+
         /// <summary>
         /// The size of a single side of the square world
         /// </summary>
@@ -55,6 +58,7 @@
         public World(int size)
         {
             this.Size = size;
+            currentPlayerID = -1;
         }
         
         /// <summary>
@@ -69,6 +73,21 @@
             this.snakes = world.snakes;
             this.powerups = world.powerups;
             this.walls = world.walls;
+            this.currentPlayerID = world.currentPlayerID;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Point2D getPlayerHead()
+        {
+            return snakes[currentPlayerID].body.Last();
+        }
+
+        public void setCurrentPlayerID(int playerID)
+        {
+            currentPlayerID = playerID;
         }
     }
 }

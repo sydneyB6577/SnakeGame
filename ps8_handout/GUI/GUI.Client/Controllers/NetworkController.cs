@@ -55,7 +55,7 @@
         /// </summary>
         public void moveUP()
         {
-            connection.Send("{\"moving\":\"up\"}\r\n");
+            connection.Send("{\"moving\":\"up\"}");
         }
 
         /// <summary>
@@ -63,7 +63,7 @@
         /// </summary>
         public void moveDOWN()
         {
-            connection.Send("{\"moving\":\"up\"}\r\n");
+            connection.Send("{\"moving\":\"down\"}");
         }
 
         /// <summary>
@@ -71,7 +71,7 @@
         /// </summary>
         public void moveLEFT()
         {
-            connection.Send("{\"moving\":\"up\"}\r\n");
+            connection.Send("{\"moving\":\"left\"}");
         }
 
         /// <summary>
@@ -79,7 +79,7 @@
         /// </summary>
         public void moveRIGHT()
         {
-            connection.Send("{\"moving\":\"up\"}\r\n");
+            connection.Send("{\"moving\":\"right\"}");
         }
 
         /// <summary>
@@ -110,6 +110,7 @@
 
             connection.Send(name);
             int id = int.Parse(connection.ReadLine());
+            world.setCurrentPlayerID(id);
             int size = int.Parse(connection.ReadLine());
             world.Size = size;
             world.Width = size;
