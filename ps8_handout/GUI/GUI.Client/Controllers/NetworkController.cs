@@ -1,13 +1,4 @@
-﻿// Network Controller
-//
-// The purpose of this file is to create an instance
-// of an object that will handle all necessary methods for our
-// snake game so the GUI can focus on drawing.
-//
-// Authors: Sydney Burt, Levi Hammond
-// Date: 4-11-25
-
-namespace GUI.Client.Controllers
+﻿namespace GUI.Client.Controllers
 {
     using System.Data;
     using System.Drawing;
@@ -21,14 +12,23 @@ namespace GUI.Client.Controllers
     using GUI.Client.Pages;
 
     /// <summary>
-    ///     The class to create an instance of a NetworkController object
+    ///     The purpose of this class is to create an instance of an object that will handle
+    ///     all necessary methods for our snake game so that the GUI class can focus on drawing.
+    ///     
+    ///     Authors: Sydney Burt and Levi Hammond
+    ///     Date: April 11, 2025
     /// </summary>
     public class NetworkController
     {
-        public NetworkConnection connection = new NetworkConnection(); // The connection to the server
-        static World gameWorld = new World(); // The instance of the game world
+        /// <summary>
+        ///     The connection to the server;
+        /// </summary>
+        public NetworkConnection connection = new NetworkConnection();
 
-        private int colorCounter;
+        //Creating strings to hold currentSnake.ToString() and currentPowerup.ToString(), even 
+        //if they are null.
+        private string? snakeString = string.Empty;
+        private string? powerupString = string.Empty;
 
         /// <summary>
         ///     Determines whether the user is connected or not. 
@@ -76,52 +76,58 @@ namespace GUI.Client.Controllers
         {
             connection.Send("{\"moving\":\"right\"}");
         }
-        
-
-        // Maybe make all of the movement handled in a single method to better fit JSON command movement lines.
 
         /// <summary>
         ///     Establishes a connection to the server and handles all of the JSON
         ///     strings that are send to and recieved by the server.
         /// </summary>
-        public async void HandleConnect(string name, World world)
+        public void HandleConnect(string name, World world)
         {
+            //Connects to the server and host.
             connection.Connect("localhost", 11000);
 
             IsConnected = true;
 
+            // Sends the first messages to the server and sets up world object variables.
             connection.Send(name);
             int id = int.Parse(connection.ReadLine());
             world.setCurrentPlayerID(id);
             int size = int.Parse(connection.ReadLine());
             world.Size = size;
             world.Width = size;
-            world.Height = size; // Send the first messages to the server and set up world object variables
+            world.Height = size;
 
-            Random rnd = new Random(); // Create random numbers for the colors
+            //Creates random numbers for the rgb colors.
+            Random rnd = new Random();
             int r = rnd.Next(0, 255);
             int g = rnd.Next(0, 255);
             int b = rnd.Next(0, 255);
 
-            string s = "rgb(" + r + ", " + g + ", " + b + " )"; // Create the random color
+            //Generates a random color for the snake.
+            string s = "rgb(" + r + ", " + g + ", " + b + " )";
 
             try
             {
                 while (true)
                 {
-                    //Read the message from the name box
-                    var message = connection.ReadLine(); // world object
+                    //Read the message from the name box. Message is a world object.
+                    var message = connection.ReadLine();
 
-                    if (message != null && message.Contains("snake")) // check if the string contains the word snake
+                    //Checks if the string contains the word snake
+                    if (message != null && message.Contains("snake"))
                     {
-                        Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message); // deserialize the snake object
+                        //Deserializes the snake object.
+                        Snake? currentSnake = JsonSerializer.Deserialize<Snake>(message);
+                        //Sets the color of the snake to a new, unique color.
                         currentSnake!.color = s;
-                        if (currentSnake.ToString().Contains("\"died\":true"))
+                        snakeString = currentSnake.ToString();
+                        if (snakeString!.Contains("\"died\":true"))
                         {
                             world.snakes.Remove(currentSnake.snake, out currentSnake);
                             Thread.Sleep(40);
                         }
-                        world.snakes[currentSnake!.snake] = currentSnake;// add the snake object to the world's dictionary or update it
+                        //Adds the snake object to the world's dictionary or updates it.
+                        world.snakes[currentSnake!.snake] = currentSnake;
                     }
                     else if (message != null && message.Contains("wall"))
                     {
@@ -131,7 +137,8 @@ namespace GUI.Client.Controllers
                     else if (message != null && message.Contains("power"))
                     {
                         Powerup? currentPowerup = JsonSerializer.Deserialize<Powerup>(message);
-                        if (currentPowerup.ToString().Contains("\"died\":true"))
+                        powerupString = currentPowerup!.ToString();
+                        if (powerupString!.Contains("\"died\":true"))
                         {
                             world.powerups.Remove(currentPowerup.power, out currentPowerup); // Remove from the list?
                         }
@@ -141,6 +148,7 @@ namespace GUI.Client.Controllers
             }
             catch (Exception)
             {
+                //If the user clicks the disconnect button, disconnect them from the server.
                 DisconnectServer();
             }
         }

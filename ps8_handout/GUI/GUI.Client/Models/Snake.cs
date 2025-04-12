@@ -1,26 +1,26 @@
-﻿using System.Drawing;
-
-namespace GUI.Client.Models
+﻿namespace GUI.Client.Models
 {
+    using System.Drawing;
+
     /// <summary>
-    ///     This class keeps track of the sname object the player uses to interact with the game world.
+    ///     This class keeps track of the snake object the player uses to interact with the game world.
     ///     Authors: Sydney Burt, Levi Hammond
-    ///     Date: 4-9-25
+    ///     Date: April 11, 2025
     /// </summary>
     public class Snake
     {
         /// <summary>
-        ///     The ID of this snake object
+        ///     The ID of this snake object.
         /// </summary>
         public int snake { get; set; }
 
         /// <summary>
-        ///     The input name for this snake object   
+        ///     The input name for this snake object.
         /// </summary>
         public string name { get; set; }
 
         /// <summary>
-        ///     The color set to the snake object
+        ///     The color set to the snake object.
         /// </summary>
         public string color { get; set; }
 
@@ -30,16 +30,6 @@ namespace GUI.Client.Models
         ///     Head is last point in the body point list.
         /// </summary>
         public List<Point2D> body {  get; set; }
-
-        /// <summary>
-        ///     The last point of this snake object's body
-        /// </summary>
-        public Point2D head { get; set; }
-
-        /// <summary>
-        ///     The first point of this snake object's body
-        /// </summary>
-        public Point2D tail { get; set; }
 
         /// <summary>
         ///     The direction this snake object is traveling
@@ -52,27 +42,27 @@ namespace GUI.Client.Models
         public int score { get; set; }
 
         /// <summary>
-        ///     The status of this snake object being dead or alive
+        ///     The status of this snake object being dead or alive.
         /// </summary>
         public bool died { get; set; }
 
         /// <summary>
-        ///     The status of this snake object being dead or alive
+        ///     The status of this snake object being dead or alive.
         /// </summary>
         public bool alive { get; set; }
 
         /// <summary>
-        ///     The status of this snake object being connected or disconnected
+        ///     The status of this snake object being connected or disconnected.
         /// </summary>
         public bool dc { get; set; }
 
         /// <summary>
-        ///     The status of this snake object being connected or disconnected
+        ///     The status of this snake object being connected or disconnected.
         /// </summary>
         public bool join { get; set; }
 
         /// <summary>
-        ///     The default Snake constructor so the JSON strings can interact with
+        ///     The default Snake constructor so the JSON strings can interact with snakes.
         /// </summary>
         public Snake()
         {
@@ -80,8 +70,6 @@ namespace GUI.Client.Models
             this.color = string.Empty;
             this.name = string.Empty;
             this.body = new List<Point2D>();
-            this.head = new Point2D();
-            this.tail = new Point2D();
             this.dir = new Point2D();
             this.score = 0;
             this.died = false;

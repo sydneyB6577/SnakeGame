@@ -12,6 +12,15 @@
 @using System.Drawing;
 @inject IJSRuntime JsRuntime;
 
+@*
+	This class keeps track of the GUI elements of the snake game. It also starts the game
+	and starts the connection. 
+
+	Authors: Sydney Burt and Levi Hammond
+	Date: April 11, 2025
+*@
+
+@*Title of the snake game. Also creates image references for all images used during the game.*@
 <PageTitle> Snake </PageTitle>
 <img @ref="backgroundImage" id="bgImage" src="images/Background.png" alt="image" style="display:none;" />
 <img @ref="SpaceImage" id="sImage" src="images/Space Background.jpg" alt="image" style="display:none;" />
@@ -19,6 +28,7 @@
 <img @ref="DesertImage" id="dImage" src="images/Desert Background.jpg" alt="image" style="display:none;" />
 <img @ref="wallImage" id="wImage" src="images/WallSprite.png" alt="image" style="display:none;" />
 
+@*Text boxes and buttons to connect to the server, disconnect from the server, and enter a name.*@
 <div class="input-row">
 	<label for="url"> Server Address: </label>
 	<input id="url" disabled="@network.IsConnected" type="text" @bind="ServerNameOrAddress" />
@@ -36,11 +46,12 @@
 	}
 </div>
 
+@*Buttons for the 3 new backgrounds.*@
 <button class="btn btn-primary" @onclick="setBackground1">Desert</button>
 <button class="btn btn-primary" @onclick="setBackground2">Forest</button> 
 <button class="btn btn-primary" @onclick="setBackground3">Space</button>
 
-
+@*The snake canvas the game will take place on.*@
 <div id="snakeCanvas" style="position: fixed; width: 100%; height: 100%">
 	<BECanvas Width="1000" Height="1000" @ref="canvasReference"></BECanvas>*
 </div>
