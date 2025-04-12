@@ -23,6 +23,8 @@
         /// <summary>
         ///     
         /// </summary>
+        
+        List<NetworkConnection> clients = new List<NetworkConnection>();
         public NetworkConnection connection = new NetworkConnection();
         static World gameWorld = new World();
 
@@ -87,6 +89,12 @@
         public async void HandleConnect(string name, World world)
         {
             connection.Connect("localhost", 11000);
+
+            if(!clients.Contains(connection))
+            {
+                clients.Add(connection);
+            }
+
             IsConnected = true;
 
             connection.Send(name);
