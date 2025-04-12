@@ -20,7 +20,7 @@ namespace GUI.Client.Models
         public string name { get; set; }
 
         /// <summary>
-        /// 
+        ///     The color set to the snake object
         /// </summary>
         public string color { get; set; }
 
@@ -32,12 +32,12 @@ namespace GUI.Client.Models
         public List<Point2D> body {  get; set; }
 
         /// <summary>
-        /// 
+        ///     The last point of this snake object's body
         /// </summary>
         public Point2D head { get; set; }
 
         /// <summary>
-        /// 
+        ///     The first point of this snake object's body
         /// </summary>
         public Point2D tail { get; set; }
 
@@ -72,7 +72,7 @@ namespace GUI.Client.Models
         public bool join { get; set; }
 
         /// <summary>
-        /// 
+        ///     The default Snake constructor so the JSON strings can interact with
         /// </summary>
         public Snake()
         {

@@ -1,4 +1,13 @@
-﻿namespace GUI.Client.Controllers
+﻿// Network Controller
+//
+// The purpose of this file is to create an instance
+// of an object that will handle all necessary methods for our
+// snake game so the GUI can focus on drawing.
+//
+// Authors: Sydney Burt, Levi Hammond
+// Date: 4-11-25
+
+namespace GUI.Client.Controllers
 {
     using System.Data;
     using System.Drawing;
@@ -11,21 +20,13 @@
     using GUI.Client.Models;
     using GUI.Client.Pages;
 
-    //namespace GUI.Client.Controllers
-    //{
-
     /// <summary>
-    /// 
+    ///     The class to create an instance of a NetworkController object
     /// </summary>
     public class NetworkController
     {
-        /// <summary>
-        ///     
-        /// </summary>
-        
-        List<NetworkConnection> clients = new List<NetworkConnection>();
-        public NetworkConnection connection = new NetworkConnection();
-        static World gameWorld = new World();
+        public NetworkConnection connection = new NetworkConnection(); // The connection to the server
+        static World gameWorld = new World(); // The instance of the game world
 
         private int colorCounter;
 
@@ -80,19 +81,12 @@
         // Maybe make all of the movement handled in a single method to better fit JSON command movement lines.
 
         /// <summary>
-        /// 
+        ///     Establishes a connection to the server and handles all of the JSON
+        ///     strings that are send to and recieved by the server.
         /// </summary>
-        /// THIS IS NOT ENOUGH. the message we're receiving is line by line and each line is an object
-        /// need to check if line is wall, snake, or world, then act appripriately (update the entire world). 
-        /// Don't deserialize the entire world.
         public async void HandleConnect(string name, World world)
         {
             connection.Connect("localhost", 11000);
-
-            if(!clients.Contains(connection))
-            {
-                clients.Add(connection);
-            }
 
             IsConnected = true;
 
@@ -102,14 +96,14 @@
             int size = int.Parse(connection.ReadLine());
             world.Size = size;
             world.Width = size;
-            world.Height = size;
+            world.Height = size; // Send the first messages to the server and set up world object variables
 
-            Random rnd = new Random();
+            Random rnd = new Random(); // Create random numbers for the colors
             int r = rnd.Next(0, 255);
             int g = rnd.Next(0, 255);
             int b = rnd.Next(0, 255);
 
-            string s = "rgb(" + r + ", " + g + ", " + b + " )";
+            string s = "rgb(" + r + ", " + g + ", " + b + " )"; // Create the random color
 
             try
             {
@@ -147,9 +141,7 @@
             }
             catch (Exception)
             {
-                //If the chat member has disconnected from the chat, remove them from the dictionary.
                 DisconnectServer();
-                //throw new Exception("YOU CAN'T DO THAT!");
             }
         }
     }

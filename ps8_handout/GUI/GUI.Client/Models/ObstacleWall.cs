@@ -23,7 +23,7 @@
         public Point2D p2 { get; set; }
 
         /// <summary>
-        /// 
+        ///     A default constructor for a wall object so the JSON strings can interact with it
         /// </summary>
         public ObstacleWall()
         {
@@ -31,12 +31,5 @@
             this.p1 = new Point2D(0, 0);
             this.p2 = new Point2D(1, 1);
         }
-
-        //public ObstacleWall(int id, Point2D endPointOne, Point2D endPointTwo)
-        //{
-        //    this._wallID = id;
-        //    this.endPointOne = endPointOne;
-        //    this.endPointTwo = endPointTwo;
-        //}
     }
 }
