@@ -66,6 +66,9 @@ namespace GUI.Client.Models
         /// </summary>
         public bool join { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string color { get; set; }
 
         /// <summary>

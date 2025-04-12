@@ -90,13 +90,18 @@
             return playerColor;
         }
 
-        public string setColor(List<string> colors, Snake s)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="colors"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public void setColor(List<string> colors, Snake s)
         {
             if(s.color == null)
             {
                 s.color = colors[colorCounter++];
             }
-            return s.color;
         }
         // Maybe make all of the movement handled in a single method to better fit JSON command movement lines.
 
