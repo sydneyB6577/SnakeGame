@@ -7,10 +7,6 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\GUI.Client\Pages\BECanvas.razor" Link="BECanvas.razor" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <ProjectReference Include="..\GUI.Client\GUI.Client.csproj" />

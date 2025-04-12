@@ -10,6 +10,11 @@ namespace GUI.Client.Models
     public class Snake
     {
         /// <summary>
+        /// 
+        /// </summary>
+        public List<string> colors = new List<string>(){"red", "orange", "yellow", "green", "blue", "purple", "black", "white"};
+
+        /// <summary>
         ///     The ID of this snake object
         /// </summary>
         public int snake { get; set; }
@@ -18,6 +23,11 @@ namespace GUI.Client.Models
         ///     The input name for this snake object   
         /// </summary>
         public string name { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string color { get; set; }
 
         /// <summary>
         ///     List of Point2D points in the snake.

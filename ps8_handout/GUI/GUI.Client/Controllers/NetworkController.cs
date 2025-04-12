@@ -26,12 +26,6 @@
         public NetworkConnection connection = new NetworkConnection();
         static World gameWorld = new World();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<Color> colors = new List<Color>() {Color.Red, Color.Orange, Color.Yellow, Color.Green,
-                                                Color.Blue, Color.Purple, Color.White, Color.Black};
-
         private int colorCounter = 0;
 
         private string snakeString = string.Empty;
@@ -97,6 +91,20 @@
             return playerColor;
         } 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="colors"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public void setColor(List<string> colors, Snake s)
+        {
+            if(s.color == null)
+            {
+                s.color = colors[colorCounter++];
+            }
+        }
+
         // Maybe make all of the movement handled in a single method to better fit JSON command movement lines.
 
         /// <summary>
@@ -131,9 +139,8 @@
                         {
                             world.snakes.Remove(currentSnake.snake, out currentSnake);
                             Thread.Sleep(40);
-                            //world.snakes.Add();
                         }
-                        world.snakes[currentSnake!.snake] = currentSnake; // add the snake object to the world's dictionary or update it
+                        world.snakes[currentSnake!.snake] = currentSnake;// add the snake object to the world's dictionary or update it
                     }
                     else if (message != null && message.Contains("wall"))
                     {
