@@ -26,10 +26,11 @@
         public NetworkConnection connection = new NetworkConnection();
         static World gameWorld = new World();
 
-        private int colorCounter = 0;
+        private int colorCounter;
+        /// 
+                                                Color.Blue, Color.Purple, Color.White, Color.Black};
 
-        private string snakeString = string.Empty;
-        private string powerupName = string.Empty;
+        private int colorCounter = 0;
 
         /// <summary>
         ///     Determines whether the user is connected or not. 
@@ -51,7 +52,7 @@
         /// </summary>
         public void moveUP()
         {
-            connection.Send("{\"moving\":\"up\"}\r\n");
+            connection.Send("{\"moving\":\"up\"}");
         }
 
         /// <summary>
@@ -59,7 +60,7 @@
         /// </summary>
         public void moveDOWN()
         {
-            connection.Send("{\"moving\":\"up\"}\r\n");
+            connection.Send("{\"moving\":\"down\"}");
         }
 
         /// <summary>
@@ -67,7 +68,7 @@
         /// </summary>
         public void moveLEFT()
         {
-            connection.Send("{\"moving\":\"up\"}\r\n");
+            connection.Send("{\"moving\":\"left\"}");
         }
 
         /// <summary>
@@ -75,7 +76,7 @@
         /// </summary>
         public void moveRIGHT()
         {
-            connection.Send("{\"moving\":\"up\"}\r\n");
+            connection.Send("{\"moving\":\"right\"}");
         }
 
         /// <summary>
@@ -83,14 +84,11 @@
         /// </summary>
         /// <param name="colors">A list of colors the method can choose from.</param>
         /// <returns>The color of the new snake.</returns>
-        public Color setSnakeColor(List<Color> colors)
+        public string setSnakeColor(Snake snake, List<string> colors)
         {
-            Color playerColor = colors[colorCounter];
+            string playerColor = colors[colorCounter];
             colorCounter++;
             colorCounter %= colors.Count;
-            return playerColor;
-        } 
-
         /// <summary>
         /// 
         /// </summary>
@@ -103,6 +101,9 @@
             {
                 s.color = colors[colorCounter++];
             }
+        }
+            snake.color = playerColor;
+            return playerColor;
         }
 
         // Maybe make all of the movement handled in a single method to better fit JSON command movement lines.
@@ -120,6 +121,7 @@
 
             connection.Send(name);
             int id = int.Parse(connection.ReadLine());
+            world.setCurrentPlayerID(id);
             int size = int.Parse(connection.ReadLine());
             world.Size = size;
             world.Width = size;

@@ -74,7 +74,7 @@
 	private Point2D head = new Point2D();
 	private Point2D tail = new Point2D();
 
-	private const int WorldSize = 1000;
+	private const int WorldSize = 0;
 	//This may cause problems - review
 	public static World TheWorld = new();
 	private BECanvasComponent canvasReference = null!;
@@ -126,12 +126,28 @@
 	/// <returns></returns>
 	private async Task DrawFrame()
 	{
+
 		World copyWorld;
 		lock(TheWorld) {
 			copyWorld = new(TheWorld);
 		}
 
+
+
+
+		if (!copyWorld.snakes.ContainsKey(copyWorld.currentPlayerID))
+		{
+			await context.BeginBatchAsync();
+			await context.EndBatchAsync();
+			return;
+		}
+
+
 		await context.BeginBatchAsync();
+
+		await context.FillRectAsync(0, 0, 1000, 1000);
+		await context.SetFillStyleAsync("lightblue");
+
 
 		// clip the view so that objects drawn outside the canvas will not be shown
 		await context.BeginPathAsync();
@@ -143,7 +159,7 @@
 
 		//Center on origin, move to center of view port
 		await context.TranslateAsync( ViewWidth / 2, ViewHeight / 2);
-		//await context.TranslateAsync(-head.x, -head.y);
+		await context.TranslateAsync(-copyWorld.getPlayerHead().X, -copyWorld.getPlayerHead().Y);
 
 		// Draw the background:
 		if(background == 1)
@@ -176,7 +192,8 @@
 			await context.SetLineWidthAsync(10);
 
 			//Select a color that hasn't been chosen before (unless there are more than 8 players)
-			await context.SetStrokeStyleAsync(snake.color); // Might have to change if this does not work.
+
+			await context.SetStrokeStyleAsync("red"); // Might have to change if this does not work.
 
 			//Draw a snake
 
@@ -185,24 +202,30 @@
 			// line to async
 			await context.SetLineCapAsync(LineCap.Round);
 			await context.SetLineWidthAsync(10);
+			await context.SetLineJoinAsync(LineJoin.Round);
 			await context.BeginPathAsync();
 			await context.MoveToAsync(snake.body[0].X, snake.body[0].Y);
-			for (int i = 0; i < snake.body.Count - 1; i += 1) 
+			for (int i = 0; i < snake.body.Count; i += 1) 
 			{
 				await context.LineToAsync(snake.body[i].X, snake.body[i].Y);
+				await context.FillTextAsync("name: " + snake.name + " score: " + snake.score.ToString(), snake.body[snake.body.Count - 1].X + 20, snake.body[snake.body.Count - 1].Y + 20, 200);
 			}
 			await context.StrokeAsync();
+			// await context.RectAsync();
 		}
 
 		foreach (Powerup p in copyWorld.powerups.Values)
 		{
 			//smaller yellow circle for powerups
-			await context.SetLineWidthAsync(5);
-			await context.SetLineCapAsync(LineCap.Round);
-			await context.SetStrokeStyleAsync($"rgb( 255, 255, 0 )");
-			await context.BeginPathAsync();
-			await context.ArcAsync(p.loc.X, p.loc.Y, 3, 0, 2 * Math.PI);
-			await context.StrokeAsync();
+			if (!p.died)
+			{
+				await context.SetLineWidthAsync(5);
+				await context.SetLineCapAsync(LineCap.Round);
+				await context.SetStrokeStyleAsync($"rgb( 255, 255, 0 )");
+				await context.BeginPathAsync();
+				await context.ArcAsync(p.loc.X, p.loc.Y, 3, 0, 2 * Math.PI);
+				await context.StrokeAsync();
+			}
 		}
 
 		// 	Have two walls: one vertical and one horizontal
@@ -295,11 +318,11 @@
 			}
 			else if (key.Equals("s")) /*Keep track of the axis*/
 			{
-				network.moveRIGHT();
+				network.moveDOWN();
 			}
 			else if (key.Equals("d")) /*Keep track of the axis*/
 			{
-				network.moveDOWN();
+				network.moveRIGHT();
 			}
 
 			// TODO: Remove this, which is just here to show you what the 'key' string is for whatever key you pressed
