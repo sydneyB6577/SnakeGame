@@ -86,6 +86,7 @@
 	private ElementReference SpaceImage;
 	private ElementReference ImageSelection; 
 	private ElementReference wallImage;
+	private ElementReference ImageSelection;
 	private const int ViewWidth = 1000;
 	private const int ViewHeight = 1000;
 
@@ -145,7 +146,7 @@
 		//await context.TranslateAsync(-head.x, -head.y);
 
 		// Draw the background:
-		await context.DrawImageAsync(backgroundImage, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
+		await context.DrawImageAsync(ImageSelection, -copyWorld.Width / 2, -copyWorld.Height / 2, copyWorld.Width, copyWorld.Height);
 
 
 		// Something that draws all the walls and powerups as the world gets made.
