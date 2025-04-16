@@ -10,6 +10,7 @@
     using CS3500.Networking;
     using GUI.Client.Models;
     using GUI.Client.Pages;
+    using MySql.Data.MySqlClient;
 
     /// <summary>
     ///     The purpose of this class is to create an instance of an object that will handle
@@ -29,6 +30,7 @@
         //if they are null.
         private string? snakeString = string.Empty;
         private string? powerupString = string.Empty;
+        private List<int> IDList = new List<int>();
 
         /// <summary>
         ///     Determines whether the user is connected or not. 
@@ -41,6 +43,20 @@
         /// </summary>
         public void DisconnectServer()
         {
+            string connectDatabaseString = "user=u1406577;database=Sydney;password=sydney"; // Maybe?
+
+            string leaveTime = DateTime.Now.ToString();
+
+            using (MySqlConnection SQLConnect = new MySqlConnection(connectDatabaseString))
+            {
+                SQLConnect.Open();
+                using (MySqlCommand cmd = SQLConnect.CreateCommand())
+                {
+                    cmd.CommandText = "INSERT INTO Games(LeaveTime) VALUES (@leaveTime)"; // Set's up the query
+                    cmd.Parameters.AddWithValue("@leaveTime", leaveTime); // Set the values to add to the game table
+                }
+            }
+
             connection.Disconnect();
             IsConnected = false;
         }
@@ -85,6 +101,28 @@
         {
             //Connects to the server and host.
             connection.Connect("localhost", 11000);
+
+            // Add a row to the games table
+
+            // user: u1406577
+
+            // database name: Sydney
+
+            // password: sydney
+
+            string connectDatabaseString = "user=u1406577;database=Sydney;password=sydney"; // Maybe?
+
+            string enterTime = DateTime.Now.ToString();
+
+            using (MySqlConnection SQLConnect = new MySqlConnection(connectDatabaseString))
+            {
+                SQLConnect.Open();
+                using (MySqlCommand cmd = SQLConnect.CreateCommand())
+                {
+                    cmd.CommandText = "INSERT INTO Games(EnterTime) VALUES (@enterTime)"; // Set's up the query 
+                    cmd.Parameters.AddWithValue("@enterTime", enterTime); // Set the values to add to the game table
+                }
+            }
 
             IsConnected = true;
 
