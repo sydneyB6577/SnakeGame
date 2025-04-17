@@ -11,4 +11,9 @@
     <PackageReference Include="MySql.Data" Version="9.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GUI\GUI.Client\GUI.Client.csproj" />
+    <ProjectReference Include="..\GUI\GUI\GUI.csproj" />
+  </ItemGroup>
+
 </Project>
