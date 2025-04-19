@@ -85,6 +85,7 @@
         {
             //Connects to the server and host.
             connection.Connect("localhost", 11000);
+            //Add a row to the Games table
 
             IsConnected = true;
 

@@ -9,7 +9,7 @@
 // and write lines between clients.
 // 
 // Authors: Sydney Burt, Levi Hammond
-// Date: 3-28-2025
+// Date: 4-15-2025
 
 using System.Net.Http;
 using System.Net;
@@ -53,8 +53,8 @@ public sealed class NetworkConnection : IDisposable
         if (IsConnected)
         {
             // Only establish the reader/writer if the provided TcpClient is already connected.
-            _reader = new StreamReader(_tcpClient.GetStream(), Encoding.UTF8);
-            _writer = new StreamWriter(_tcpClient.GetStream(), Encoding.UTF8) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
+            _reader = new StreamReader(_tcpClient.GetStream(), new UTF8Encoding(false));
+            _writer = new StreamWriter(_tcpClient.GetStream(), new UTF8Encoding(false)) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
         }
     }
 
@@ -88,8 +88,8 @@ public sealed class NetworkConnection : IDisposable
         {
             _tcpClient = new TcpClient();
             _tcpClient.Connect(host, port); // error here
-            _reader = new StreamReader(_tcpClient.GetStream(), Encoding.UTF8);
-            _writer = new StreamWriter(_tcpClient.GetStream(), Encoding.UTF8) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
+            _reader = new StreamReader(_tcpClient.GetStream(), new UTF8Encoding(false));
+            _writer = new StreamWriter(_tcpClient.GetStream(), new UTF8Encoding(false)) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
         }
         catch (Exception)
         {
