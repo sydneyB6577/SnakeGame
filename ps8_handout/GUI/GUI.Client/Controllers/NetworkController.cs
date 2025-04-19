@@ -22,6 +22,15 @@
     public class NetworkController
     {
         /// <summary>
+        ///     The connection string.
+        ///     Sydney's uID login name serves as both the database name and the uid.
+        /// </summary>
+        public const string connectDatabaseString = "server=atr.eng.utah.edu;" +
+        "database=u1406577;" +
+        "uid=u1406577;" +
+        "password=sydney";
+
+        /// <summary>
         ///     The connection to the server;
         /// </summary>
         public NetworkConnection connection = new NetworkConnection();
@@ -43,10 +52,10 @@
         /// </summary>
         public void DisconnectServer()
         {
-            string connectDatabaseString = "user=u1406577;database=Sydney;password=sydney"; // Maybe?
-
+            //Get the time the game ended
             string leaveTime = DateTime.Now.ToString();
 
+            //Add the end time to the games table
             using (MySqlConnection SQLConnect = new MySqlConnection(connectDatabaseString))
             {
                 SQLConnect.Open();
@@ -101,20 +110,11 @@
         {
             //Connects to the server and host.
             connection.Connect("localhost", 11000);
-            //Add a row to the Games table
-
-            // Add a row to the games table
-
-            // user: u1406577
-
-            // database name: Sydney
-
-            // password: sydney
-
-            string connectDatabaseString = "user=u1406577;database=Sydney;password=sydney"; // Maybe?
-
+            
+            //Get the time the game started.
             string enterTime = DateTime.Now.ToString();
-
+            
+            //Add a row to the Games table
             using (MySqlConnection SQLConnect = new MySqlConnection(connectDatabaseString))
             {
                 SQLConnect.Open();
