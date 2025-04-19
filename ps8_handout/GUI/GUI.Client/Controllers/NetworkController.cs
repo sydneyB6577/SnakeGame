@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using CS3500.Networking;
 using GUI.Client.Models;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Security;
 
 namespace GUI.Client.Controllers
 {
@@ -108,6 +109,8 @@ namespace GUI.Client.Controllers
         /// </summary>
         public void HandleConnect(string name, World world)
         {
+            int maxScore = 0;
+
             //Connects to the server and host.
             connection.Connect("localhost", 11000);
             
@@ -175,20 +178,25 @@ namespace GUI.Client.Controllers
                                 {
                                     //Makes a new row with the new snake's id, name, entry time, and gameID
                                     command.CommandText = "INSERT INTO Players(SnakeID, SnakeName, EnterTime, GameID) VALUES (\"" + currentSnake!.snake + "\" + \"" + currentSnake.name + "\" + \"" + enterTime + "\" + SELECT LAST_INSERT_ID();";
+                                    command.ExecuteNonQuery();
                                 }
                             }
                             IDList.Add(currentSnake!.snake);
                         }
 
-                        if()//Already in list
+                        if(IDList.Contains(currentSnake!.snake))//Already in list
                         {
+                            if(currentSnake.score > maxScore)
+                                maxScore = currentSnake.score;
+                            
                             using (MySqlConnection SQLConnectPlayer = new MySqlConnection(connectDatabaseString))
                             {
                                 SQLConnectPlayer.Open();
                                 using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
                                 {
                                     //Updates max score only
-                                    command.CommandText = "INSERT INTO Players(SnakeID, SnakeName, EnterTime, GameID) VALUES (\"" + currentSnake!.snake + "\" + \"" + currentSnake.name + "\" + \"" + enterTime + "\" + SELECT LAST_INSERT_ID();";
+                                    command.CommandText = "UPDATE Players SET PlayerMaxScore = \"" + maxScore + "\"";
+                                    command.ExecuteNonQuery();
                                 }
                             }
                             IDList.Add(currentSnake!.snake);
