@@ -1,17 +1,16 @@
-﻿namespace GUI.Client.Controllers
-{
-    using System.Data;
-    using System.Drawing;
-    using System.Net.NetworkInformation;
-    using System.Net.Sockets;
-    using System.Text;
-    using System.Text.Json;
-    using System.Xml.Linq;
-    using CS3500.Networking;
-    using GUI.Client.Models;
-    using GUI.Client.Pages;
-    using MySql.Data.MySqlClient;
+﻿using System.Data;
+using System.Drawing;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Text;
+using System.Text.Json;
+using System.Xml.Linq;
+using CS3500.Networking;
+using GUI.Client.Models;
+using MySql.Data.MySqlClient;
 
+namespace GUI.Client.Controllers
+{
     /// <summary>
     ///     The purpose of this class is to create an instance of an object that will handle
     ///     all necessary methods for our snake game so that the GUI class can focus on drawing.
@@ -61,8 +60,9 @@
                 SQLConnect.Open();
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
-                    cmd.CommandText = "INSERT INTO Games(LeaveTime) VALUES (@leaveTime)"; // Set's up the query
-                    cmd.Parameters.AddWithValue("@leaveTime", leaveTime); // Set the values to add to the game table
+                    cmd.CommandText = "UPDATE Games SET LeaveTime = \"" + leaveTime + "\" WHERE GameID = SELECT LAST_INSERT_ID();"; //Add a where statement?
+                    cmd.CommandText = "UPDATE Players SET LeaveTime = \"" + leaveTime + "\""; //Add a where statement
+                    cmd.ExecuteNonQuery();
                 }
             }
 
@@ -120,8 +120,8 @@
                 SQLConnect.Open();
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
-                    cmd.CommandText = "INSERT INTO Games(EnterTime) VALUES (@enterTime)"; // Set's up the query 
-                    cmd.Parameters.AddWithValue("@enterTime", enterTime); // Set the values to add to the game table
+                    cmd.CommandText = "INSERT INTO Games(EnterTime) VALUES (\"" + enterTime + "\")"; // Set's up the query 
+                    cmd.ExecuteNonQuery(); //Runs our instruction
                 }
             }
 
@@ -165,6 +165,35 @@
                             world.snakes.Remove(currentSnake.snake, out currentSnake);
                             Thread.Sleep(40);
                         }
+
+                        if (!IDList.Contains(currentSnake!.snake))
+                        {
+                            using(MySqlConnection SQLConnectPlayer = new MySqlConnection(connectDatabaseString))
+                            {
+                                SQLConnectPlayer.Open();
+                                using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
+                                {
+                                    //Makes a new row with the new snake's id, name, entry time, and gameID
+                                    command.CommandText = "INSERT INTO Players(SnakeID, SnakeName, EnterTime, GameID) VALUES (\"" + currentSnake!.snake + "\" + \"" + currentSnake.name + "\" + \"" + enterTime + "\" + SELECT LAST_INSERT_ID();";
+                                }
+                            }
+                            IDList.Add(currentSnake!.snake);
+                        }
+
+                        if()//Already in list
+                        {
+                            using (MySqlConnection SQLConnectPlayer = new MySqlConnection(connectDatabaseString))
+                            {
+                                SQLConnectPlayer.Open();
+                                using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
+                                {
+                                    //Updates max score only
+                                    command.CommandText = "INSERT INTO Players(SnakeID, SnakeName, EnterTime, GameID) VALUES (\"" + currentSnake!.snake + "\" + \"" + currentSnake.name + "\" + \"" + enterTime + "\" + SELECT LAST_INSERT_ID();";
+                                }
+                            }
+                            IDList.Add(currentSnake!.snake);
+                        }
+
                         //Adds the snake object to the world's dictionary or updates it.
                         world.snakes[currentSnake!.snake] = currentSnake;
                     }
