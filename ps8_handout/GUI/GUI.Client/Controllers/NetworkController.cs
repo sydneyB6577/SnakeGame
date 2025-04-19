@@ -109,8 +109,6 @@ namespace GUI.Client.Controllers
         /// </summary>
         public void HandleConnect(string name, World world)
         {
-            int maxScore = 0;
-
             //Connects to the server and host.
             connection.Connect("localhost", 11000);
             
@@ -186,8 +184,8 @@ namespace GUI.Client.Controllers
 
                         if(IDList.Contains(currentSnake!.snake))//Already in list
                         {
-                            if(currentSnake.score > maxScore)
-                                maxScore = currentSnake.score;
+                            if(currentSnake.score > currentSnake.maxScore)
+                                currentSnake.maxScore = currentSnake.score;
                             
                             using (MySqlConnection SQLConnectPlayer = new MySqlConnection(connectDatabaseString))
                             {
@@ -195,7 +193,7 @@ namespace GUI.Client.Controllers
                                 using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
                                 {
                                     //Updates max score only
-                                    command.CommandText = "UPDATE Players SET PlayerMaxScore = \"" + maxScore + "\"";
+                                    command.CommandText = "UPDATE Players SET PlayerMaxScore = \"" + currentSnake.maxScore + "\"";
                                     command.ExecuteNonQuery();
                                 }
                             }

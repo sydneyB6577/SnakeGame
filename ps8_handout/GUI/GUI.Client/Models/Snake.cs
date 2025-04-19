@@ -42,6 +42,11 @@
         public int score { get; set; }
 
         /// <summary>
+        ///     The maximum score this snake recieved throughout all games.
+        /// </summary>
+        public int maxScore { get; set; }
+
+        /// <summary>
         ///     The status of this snake object being dead or alive.
         /// </summary>
         public bool died { get; set; }
@@ -72,6 +77,7 @@
             this.body = new List<Point2D>();
             this.dir = new Point2D();
             this.score = 0;
+            this.maxScore = 0;
             this.died = false;
             this.alive = true;
             this.dc = false;
