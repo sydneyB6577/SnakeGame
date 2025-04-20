@@ -72,7 +72,7 @@ namespace WebServer
                         while (reader.Read())
                         {
                             response += "<tr>";
-                            response += "<td>" + "<a href=\"/games?gid=" + reader["ID"] + ">" + reader["GameID"] + "</a>" +  "</td>";
+                            response += "<td>" + "<a href=\"/games?gid=" + reader["GameID"] + ">" + reader["GameID"] + "</a>" +  "</td>";
                             response += "<td>" + reader["StartTime"] + "</td>";
                             response += "<td>" + reader["EndTime"] + "</td>";
                             response += "</tr>";
@@ -92,11 +92,10 @@ namespace WebServer
                 response += "<html>" + "<h3>" + "Stats for Game X" + "</h3>" + "<table border=\"1\">" +
                     "<thead>" + "<tr>" + "<td>Player ID</td><td>Player Name</td><td>Max Score</td><td>Enter Time</td><td>Leave Time</td>" +
                     "</tr>" + "<tbody>";
-
-                using (MySqlConnection connectionOne = new MySqlConnection(NetworkController.connectDatabaseString))
+                using (MySqlConnection connectionTwo = new MySqlConnection(NetworkController.connectDatabaseString))
                 {
-                    connectionOne.Open();
-                    MySqlCommand cmd = connectionOne.CreateCommand();
+                    connectionTwo.Open();
+                    MySqlCommand cmd = connectionTwo.CreateCommand();
                     cmd.CommandText = "select * from Players";
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
