@@ -11,9 +11,6 @@ namespace WebServer
 {
     public static class WebServer
     {
-        private NetworkController controller = new NetworkController();
-
-        private string connectionString = controller.connec
 
         private const string httpOkHeader = "HTTP/1.1 200 OK\r\n" +
             "Connection: close\r\n" +
@@ -43,7 +40,7 @@ namespace WebServer
                 // serve to the display page
 
                 string response = httpOkHeader;
-                response += "<html>\r\n  <h3>Welcome to the Snake Games Database!</h3>\r\n  <a href=\"/games\">View Games</a>\r\n</html>";
+                response += "<html>\r\n" + "<h3>Welcome to the Snake Games Database!</h3>\r\n" + "<a href=\"/games\">View Games</a>\r\n</html>"; // might have to separate into multiple response += strings in case this is wrong. COME BACK!!!
                 connection.Send(response);
                 connection.Disconnect();
             }
@@ -51,21 +48,30 @@ namespace WebServer
             {
                 // serve to the table of all the games in the database
 
-                // mySQLConnection = new(connectionString)
-
-                // command.CommantText = "select * from Games;"
-
-                // using(MySqlReader = command.ExecuteReader)
-
-                // while(reader.Read()) get evert 
+                // mySQLConnection = new(connectDatabaseString)
 
                 string response = httpOkHeader;
 
-                response += "<table>";
+                response += "<html>" + "<table border=\"1\">" + "<thead>" + "<tr>" + "<td>ID</td><td>Start</td><td>End</td>" + "</tr>" + "</thead>" + "<tbody>";
 
-                
-
-                response += "<html>\r\n  <table border=\"1\">\r\n    <thead>\r\n      <tr>\r\n        <td>ID</td><td>Start</td><td>End</td>\r\n      </tr>\r\n    </thead>\r\n    <tbody>\r\n      <tr>\r\n        <td><a href=\"/games?gid=8\">8</a></td>\r\n        <td>11/23/2024 10:38:52 AM</td>\r\n        <td>11/23/2024 10:39:52 AM</td>\r\n      </tr>\r\n      ... (more table rows omitted for brevity) ...\r\n    </tbody>\r\n  </table>\r\n</html>";
+                using (MySqlConnection connectionOne = new MySqlConnection(NetworkController.connectDatabaseString))
+                {
+                    connectionOne.Open();
+                    MySqlCommand cmd = connectionOne.CreateCommand();
+                    cmd.CommandText = "select * from Games";
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            response += "<tr>";
+                            response += "<td>" + reader["ID"] + "</td>";
+                            response += "<td>" + reader["Start"] + "</td>";
+                            response += "<td>" + reader["End"] + "</td>";
+                            response += "</tr>";
+                        }
+                    }
+                }
+                response += "</tbody>" + "</table>" + "</html>";
                 connection.Send(response);
                 connection.Disconnect();
             }
