@@ -72,9 +72,9 @@ namespace WebServer
                         while (reader.Read())
                         {
                             response += "<tr>";
-                            response += "<td>" + "<a href=\"/games?gid=" + reader["ID"] + ">" + reader["ID"] + "</a>" +  "</td>";
-                            response += "<td>" + reader["Start"] + "</td>";
-                            response += "<td>" + reader["End"] + "</td>";
+                            response += "<td>" + "<a href=\"/games?gid=" + reader["ID"] + ">" + reader["GameID"] + "</a>" +  "</td>";
+                            response += "<td>" + reader["StartTime"] + "</td>";
+                            response += "<td>" + reader["EndTime"] + "</td>";
                             response += "</tr>";
                         }
                     }
@@ -89,10 +89,30 @@ namespace WebServer
 
                 string response = httpOkHeader;
 
-
                 response += "<html>" + "<h3>" + "Stats for Game X" + "</h3>" + "<table border=\"1\">" +
                     "<thead>" + "<tr>" + "<td>Player ID</td><td>Player Name</td><td>Max Score</td><td>Enter Time</td><td>Leave Time</td>" +
                     "</tr>" + "<tbody>";
+
+                using (MySqlConnection connectionOne = new MySqlConnection(NetworkController.connectDatabaseString))
+                {
+                    connectionOne.Open();
+                    MySqlCommand cmd = connectionOne.CreateCommand();
+                    cmd.CommandText = "select * from Players";
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            response += "<tr>";
+                            response += "<td>" + reader["PlayerID"] + "</td>";
+                            response += "<td>" + reader["PlayerName"] + "</td>";
+                            response += "<td>" + reader["MaxScore"] + "</td>";
+                            response += "<td>" + reader["EnterTime"] + "</td>";
+                            response += "<td>" + reader["LeaveTime"] + "</td>";
+                            response += "</tr>";
+                        }
+                    }
+                }
+                response += "</tbody>" + "</table>" + "</html>";
                 connection.Send(response);
                 connection.Disconnect();
             }
