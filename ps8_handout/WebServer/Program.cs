@@ -64,7 +64,7 @@ namespace WebServer
                         while (reader.Read())
                         {
                             response += "<tr>";
-                            response += "<td>" + reader["ID"] + "</td>";
+                            response += "<td>" + "<a href=\"/games?gid=" + reader["ID"] + ">" + reader["ID"] + "</a>" +  "</td>";
                             response += "<td>" + reader["Start"] + "</td>";
                             response += "<td>" + reader["End"] + "</td>";
                             response += "</tr>";
@@ -80,7 +80,11 @@ namespace WebServer
                 // serve to the stats for a specific game of a given gameID "x"
 
                 string response = httpOkHeader;
-                response += "<html>\r\n  <h3>Stats for Game 9</h3>\r\n  <table border=\"1\">\r\n    <thead>\r\n      <tr>\r\n        <td>Player ID</td><td>Player Name</td><td>Max Score</td><td>Enter Time</td><td>Leave Time</td>\r\n      </tr>\r\n    </thead>\r\n    <tbody>\r\n      <tr>\r\n        <td>12</td><td>Danny</td><td>1</td><td>11/23/2024 10:41:29 AM</td><td>11/23/2024 10:41:53 AM</td>\r\n      </tr>\r\n      ... (more table rows omitted for brevity) ...\r\n    </tbody>\r\n  </table>\r\n</html>";
+
+
+                response += "<html>" + "<h3>" + "Stats for Game X" + "</h3>" + "<table border=\"1\">" +
+                    "<thead>" + "<tr>" + "<td>Player ID</td><td>Player Name</td><td>Max Score</td><td>Enter Time</td><td>Leave Time</td>" +
+                    "</tr>" + "<tbody>";
                 connection.Send(response);
                 connection.Disconnect();
             }
