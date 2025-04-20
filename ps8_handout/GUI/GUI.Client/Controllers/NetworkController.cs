@@ -103,6 +103,11 @@ namespace GUI.Client.Controllers
             connection.Send("{\"moving\":\"right\"}");
         }
 
+        public string GetConnectionString()
+        {
+            return connectDatabaseString;
+        }
+
         /// <summary>
         ///     Establishes a connection to the server and handles all of the JSON
         ///     strings that are send to and recieved by the server.
