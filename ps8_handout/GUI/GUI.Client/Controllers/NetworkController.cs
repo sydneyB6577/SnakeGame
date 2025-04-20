@@ -61,8 +61,8 @@ namespace GUI.Client.Controllers
                 SQLConnect.Open();
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
-                    cmd.CommandText = "UPDATE Games SET LeaveTime = \"" + leaveTime + "\" WHERE GameID = SELECT LAST_INSERT_ID();"; //Add a where statement?
-                    cmd.CommandText = "UPDATE Players SET LeaveTime = \"" + leaveTime + "\""; //Add a where statement
+                    cmd.CommandText = "UPDATE Games SET LeaveTime = " + leaveTime + " WHERE GameID = SELECT LAST_INSERT_ID();"; //Add a where statement?
+                    cmd.CommandText = "UPDATE Players SET LeaveTime = " + leaveTime + " WHERE GameID = SELECT LAST_INSERT_ID();"; //Add a where statement
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -121,7 +121,7 @@ namespace GUI.Client.Controllers
                 SQLConnect.Open();
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
-                    cmd.CommandText = "INSERT INTO Games(EnterTime) VALUES (\"" + enterTime + "\")"; // Set's up the query 
+                    cmd.CommandText = "INSERT INTO Games(EnterTime) VALUES (" + enterTime + ")"; // Set's up the query 
                     cmd.ExecuteNonQuery(); //Runs our instruction
                 }
             }
@@ -175,7 +175,7 @@ namespace GUI.Client.Controllers
                                 using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
                                 {
                                     //Makes a new row with the new snake's id, name, entry time, and gameID
-                                    command.CommandText = "INSERT INTO Players(SnakeID, SnakeName, EnterTime, GameID) VALUES (\"" + currentSnake!.snake + "\" + \"" + currentSnake.name + "\" + \"" + enterTime + "\" + SELECT LAST_INSERT_ID();";
+                                    command.CommandText = "INSERT INTO Players(SnakeID, SnakeName, EnterTime, GameID) VALUES (" + currentSnake!.snake + " + \"" + currentSnake.name + "\" + " + enterTime + " SELECT LAST_INSERT_ID();";
                                     command.ExecuteNonQuery();
                                 }
                             }
@@ -193,7 +193,7 @@ namespace GUI.Client.Controllers
                                 using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
                                 {
                                     //Updates max score only
-                                    command.CommandText = "UPDATE Players SET PlayerMaxScore = \"" + currentSnake.maxScore + "\"";
+                                    command.CommandText = "UPDATE Players SET PlayerMaxScore = " + currentSnake.maxScore + " WHERE GameID = SELECT LAST_INSERT_ID()";
                                     command.ExecuteNonQuery();
                                 }
                             }
