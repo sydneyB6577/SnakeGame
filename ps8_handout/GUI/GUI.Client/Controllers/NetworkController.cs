@@ -5,7 +5,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
-using CS3500.Networking;
 using GUI.Client.Models;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Security;
@@ -53,7 +52,7 @@ namespace GUI.Client.Controllers
         public void DisconnectServer()
         {
             //Get the time the game ended
-            string leaveTime = DateTime.Now.ToString();
+            string endTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             //Add the end time to the games table
             using (MySqlConnection SQLConnect = new MySqlConnection(connectDatabaseString))
@@ -61,8 +60,8 @@ namespace GUI.Client.Controllers
                 SQLConnect.Open();
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
-                    cmd.CommandText = "UPDATE Games SET LeaveTime = " + leaveTime + " WHERE GameID = SELECT LAST_INSERT_ID();"; //Add a where statement?
-                    cmd.CommandText = "UPDATE Players SET LeaveTime = " + leaveTime + " WHERE GameID = SELECT LAST_INSERT_ID();"; //Add a where statement
+                    cmd.CommandText = "UPDATE Games SET EndTime = " + "\"" +  endTime + "\"" + "WHERE GameID = (SELECT LAST_INSERT_ID());"; //Add a where statement?
+                    cmd.CommandText = "UPDATE Players SET LeaveTime = " + "\"" + endTime + "\"" + " WHERE GameID = (SELECT LAST_INSERT_ID());"; //Add a where statement
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -118,7 +117,7 @@ namespace GUI.Client.Controllers
             connection.Connect("localhost", 11000);
             
             //Get the time the game started.
-            string enterTime = DateTime.Now.ToString();
+            string startTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             
             //Add a row to the Games table
             using (MySqlConnection SQLConnect = new MySqlConnection(connectDatabaseString))
@@ -126,7 +125,7 @@ namespace GUI.Client.Controllers
                 SQLConnect.Open();
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
-                    cmd.CommandText = "INSERT INTO Games(EnterTime) VALUES (" + enterTime + ")"; // Set's up the query 
+                    cmd.CommandText = "INSERT INTO Games(StartTime) VALUES (\"" + startTime + "\");"; // Set's up the query.
                     cmd.ExecuteNonQuery(); //Runs our instruction
                 }
             }
@@ -180,7 +179,7 @@ namespace GUI.Client.Controllers
                                 using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
                                 {
                                     //Makes a new row with the new snake's id, name, entry time, and gameID
-                                    command.CommandText = "INSERT INTO Players(SnakeID, SnakeName, EnterTime, GameID) VALUES (" + currentSnake!.snake + " + \"" + currentSnake.name + "\" + " + enterTime + " SELECT LAST_INSERT_ID();";
+                                    command.CommandText = "INSERT INTO Players(SnakeID, SnakeName, EnterTime, GameID) VALUES (" + currentSnake!.snake + "\"" + currentSnake.name + "\"" + startTime + " SELECT LAST_INSERT_ID();";
                                     command.ExecuteNonQuery();
                                 }
                             }

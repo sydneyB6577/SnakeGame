@@ -15,7 +15,7 @@ using System.Net.Http;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-namespace CS3500.Networking;
+namespace GUI.Client.Controllers;
 
 /// <summary>
 ///   Wraps the StreamReader/Writer/TcpClient together so we
