@@ -134,7 +134,7 @@ namespace GUI.Client.Controllers
                     cmd.ExecuteNonQuery(); //Runs our instruction
                 }
 
-                MySqlCommand cmdTwo = new MySqlCommand();
+                MySqlCommand cmdTwo = SQLConnect.CreateCommand();
                 cmdTwo.CommandText = "SELECT LAST_INSERT_ID();";
                 using (MySqlDataReader reader = cmdTwo.ExecuteReader())
                 {
