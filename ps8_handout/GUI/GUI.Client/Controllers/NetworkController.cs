@@ -60,12 +60,11 @@ namespace GUI.Client.Controllers
                 SQLConnect.Open();
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
-                    cmd.CommandText = "UPDATE Games SET EndTime = " + "\"" +  endTime + "\"" + "WHERE GameID = (SELECT LAST_INSERT_ID());"; //Add a where statement?
+                    cmd.CommandText = "UPDATE Games SET EndTime = " + "\"" +  endTime + "\"" + " WHERE GameID = (SELECT LAST_INSERT_ID());"; //Add a where statement?
                     cmd.CommandText = "UPDATE Players SET LeaveTime = " + "\"" + endTime + "\"" + " WHERE GameID = (SELECT LAST_INSERT_ID());"; //Add a where statement
                     cmd.ExecuteNonQuery();
                 }
             }
-
             connection.Disconnect();
             IsConnected = false;
         }
@@ -102,6 +101,10 @@ namespace GUI.Client.Controllers
             connection.Send("{\"moving\":\"right\"}");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetConnectionString()
         {
             return connectDatabaseString;
@@ -129,7 +132,6 @@ namespace GUI.Client.Controllers
                     cmd.ExecuteNonQuery(); //Runs our instruction
                 }
             }
-
             IsConnected = true;
 
             // Sends the first messages to the server and sets up world object variables.
@@ -179,7 +181,8 @@ namespace GUI.Client.Controllers
                                 using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
                                 {
                                     //Makes a new row with the new snake's id, name, entry time, and gameID
-                                    command.CommandText = "INSERT INTO Players(SnakeID, SnakeName, EnterTime, GameID) VALUES (" + currentSnake!.snake + "\"" + currentSnake.name + "\"" + startTime + " SELECT LAST_INSERT_ID();";
+                                    command.CommandText = "INSERT INTO Players (SnakeID, SnakeName, EnterTime, GameID) VALUES (currentSnake.snake, currentSnake.name, startTime, SELECT LAST_INSERT_ID();";
+                                    //Causing a problem, SQL syntax issues
                                     command.ExecuteNonQuery();
                                 }
                             }
@@ -224,7 +227,7 @@ namespace GUI.Client.Controllers
                     }
                 }
             }
-            catch (Exception)
+            catch (ArgumentNullException)
             {
                 //If the user clicks the disconnect button, disconnect them from the server.
                 DisconnectServer();

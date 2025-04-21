@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Hosting.Server;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI;
 
-
 namespace WebServer
 {
     /// <summary>
@@ -14,7 +13,6 @@ namespace WebServer
     /// </summary>
     public static class WebServer
     {
-
         private const string httpOkHeader = "HTTP/1.1 200 OK\r\n" +
             "Connection: close\r\n" +
             "Content-Type: text/html; charset=UTF-8\r\n" +
@@ -37,7 +35,7 @@ namespace WebServer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="connection"></param>
+        /// <param name="connection"> Server fills the database. </param>
         private static void HandleHttpConnection(NetworkConnection connection)
         {
             Console.WriteLine("new client");
@@ -47,18 +45,13 @@ namespace WebServer
             if(request.Contains("GET / "))
             {
                 // serve to the display page
-
                 string response = httpOkHeader;
                 response += "<html>\r\n" + "<h3>Welcome to the Snake Games Database!</h3>\r\n" + "<a href=\"/games\">View Games</a>\r\n</html>"; // might have to separate into multiple response += strings in case this is wrong. COME BACK!!!
                 connection.Send(response);
-                connection.Disconnect();
             }
             else if(request.Contains("GET /games"))
             {
-                // serve to the table of all the games in the database
-
-                // mySQLConnection = new(connectDatabaseString)
-
+                // serve to the table of all the games in the database)
                 string response = httpOkHeader;
 
                 response += "<html>" + "<table border=\"1\">" + "<thead>" + "<tr>" + "<td>ID</td><td>Start</td><td>End</td>" + "</tr>" + "</thead>" + "<tbody>";
@@ -68,6 +61,7 @@ namespace WebServer
                     connectionOne.Open();
                     MySqlCommand cmd = connectionOne.CreateCommand();
                     cmd.CommandText = "select * from Games";
+                    
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -82,12 +76,12 @@ namespace WebServer
                 }
                 response += "</tbody>" + "</table>" + "</html>";
                 connection.Send(response);
-                connection.Disconnect();
+                //Disconnects from snake server even when server # is 80.
+                //connection.Disconnect();
             }
             else if(request.Contains("GET /games?gid=x"))
             {
                 // serve to the stats for a specific game of a given gameID "x"
-
                 string response = httpOkHeader;
 
                 response += "<html>" + "<h3>" + "Stats for Game X" + "</h3>" + "<table border=\"1\">" +
@@ -114,14 +108,12 @@ namespace WebServer
                 }
                 response += "</tbody>" + "</table>" + "</html>";
                 connection.Send(response);
-                connection.Disconnect();
             }
             else
             {
                 // if the server is not found
                 string response = httpBadHeader;
                 connection.Send(response);
-                connection.Disconnect();
             }
         }
     }
