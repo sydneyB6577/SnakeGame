@@ -181,8 +181,8 @@ namespace GUI.Client.Controllers
                                 using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
                                 {
                                     //Makes a new row with the new snake's id, name, entry time, and gameID
-                                    command.CommandText = "INSERT INTO Players (SnakeID, SnakeName, EnterTime, GameID) VALUES (currentSnake.snake, currentSnake.name, startTime, SELECT LAST_INSERT_ID();";
-                                    //Causing a problem, SQL syntax issues
+                                    command.CommandText = "INSERT INTO Players (SnakeID, SnakeName, EnterTime, GameID) VALUES (\"" + currentSnake.snake + "\", \"" + currentSnake.name + "\", \"" + startTime +"\" , LAST_INSERT_ID() );";
+                                    //Causing a problem, SQL syntax issues, need to make everything nullable, need to make last_insert_id into separate private variable in networkController.
                                     command.ExecuteNonQuery();
                                 }
                             }
