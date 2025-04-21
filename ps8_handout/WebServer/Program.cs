@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using CS3500.Networking;
 using GUI.Client.Controllers;
 using Microsoft.AspNetCore.Hosting.Server;
 using MySql.Data.MySqlClient;
@@ -29,6 +28,8 @@ namespace WebServer
         public static void Main(string[] args)
         {
             // start the server with the HandleHttpConnection deligate pass
+
+            Server.StartServer(HandleHttpConnection, 80);
             
             Console.Read();
         }
