@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
@@ -120,7 +121,9 @@ namespace GUI.Client.Controllers
         {
             //Connects to the server and host.
             connection.Connect("localhost", 11000);
-            
+
+            IsConnected = true;
+
             //Get the time the game started.
             string startTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             
@@ -128,6 +131,7 @@ namespace GUI.Client.Controllers
             using (MySqlConnection SQLConnect = new MySqlConnection(connectDatabaseString))
             {
                 SQLConnect.Open();
+                
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
                     cmd.CommandText = "INSERT INTO Games(StartTime) VALUES (\"" + startTime + "\");"; // Set's up the query.
@@ -142,7 +146,6 @@ namespace GUI.Client.Controllers
                     gameID = reader.GetInt32(0);
                 }
             }
-            IsConnected = true;
 
             // Sends the first messages to the server and sets up world object variables.
             connection.Send(name);
