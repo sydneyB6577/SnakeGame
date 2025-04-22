@@ -41,7 +41,7 @@ public sealed class NetworkConnection : IDisposable
     /// <summary>
     ///     Length of the http header.
     /// </summary>
-    private static int contentLength = 0;
+    public static int contentLength = 0;
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="NetworkConnection"/> class.

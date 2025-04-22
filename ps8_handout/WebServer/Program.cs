@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using GUI.Client.Controllers;
-using Microsoft.AspNetCore.Hosting.Server;
+﻿using GUI.Client.Controllers;
 using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI;
 
 namespace WebServer
 {
@@ -22,7 +17,7 @@ namespace WebServer
         private const string httpOkHeader = "HTTP/1.1 200 OK\r\n" +
             "Connection: close\r\n" +
             "Content-Type: text/html; charset=UTF-8\r\n" +
-            "Content-Length: 89\r\n" + 
+            "Content-Length: {NetworkConnection.contentLength} \r\n" +
             "\r\n";
 
         /// <summary>
@@ -57,7 +52,7 @@ namespace WebServer
             string request = connection.ReadLine();
             Console.WriteLine(request);
 
-            if(request.Contains("GET / "))
+            if (request.Contains("GET / "))
             {
                 //Creates the first display page with the title of the website.
                 string response = httpOkHeader;
@@ -66,7 +61,7 @@ namespace WebServer
                 connection.Send(response);
                 Console.WriteLine(response); //Is this necessary?
             }
-            else if(request.Contains("GET /games"))
+            else if (request.Contains("GET /games"))
             {
                 //Displays a table with all of the game information in the database.
                 string response = httpOkHeader;
@@ -78,7 +73,7 @@ namespace WebServer
                     connectionOne.Open();
                     MySqlCommand cmd = connectionOne.CreateCommand();
                     cmd.CommandText = "select * from Games";
-                    
+
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -94,7 +89,7 @@ namespace WebServer
                 response += "</tbody>\r\n" + "</table>\r\n" + "</html>\r\n";
                 connection.Send(response);
             }
-            else if(request.Contains("GET /games?gid="))
+            else if (request.Contains("GET /games?gid="))
             {
                 //Displays the stats for a specific game of a given gameID "x."
                 string response = httpOkHeader;
