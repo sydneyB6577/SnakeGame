@@ -5,11 +5,11 @@
 // NetworkConnection
 //
 // The purpose of this file is to create instances of the TcpClient,
-// establish it's reader and writer, and hold various methods to read
+// establish its reader and writer, and hold various methods to read
 // and write lines between clients.
 // 
 // Authors: Sydney Burt, Levi Hammond
-// Date: 4-15-2025
+// Date: 4-22-2025
 
 using System.Net.Http;
 using System.Net;
@@ -39,6 +39,11 @@ public sealed class NetworkConnection : IDisposable
     private StreamWriter? _writer = null;
 
     /// <summary>
+    ///     Length of the http header.
+    /// </summary>
+    private static int contentLength = 0;
+
+    /// <summary>
     ///   Initializes a new instance of the <see cref="NetworkConnection"/> class.
     ///   <para>
     ///     Create a network connection object.
@@ -55,6 +60,7 @@ public sealed class NetworkConnection : IDisposable
             // Only establish the reader/writer if the provided TcpClient is already connected.
             _reader = new StreamReader(_tcpClient.GetStream(), new UTF8Encoding(false));
             _writer = new StreamWriter(_tcpClient.GetStream(), new UTF8Encoding(false)) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
+            contentLength = _reader.ToString()!.Length;
         }
     }
 

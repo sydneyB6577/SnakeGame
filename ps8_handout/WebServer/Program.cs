@@ -9,35 +9,48 @@ using MySqlX.XDevAPI;
 namespace WebServer
 {
     /// <summary>
-    /// 
+    ///     A class that generates a web server to display game information from the database.  
+    ///     
+    ///     Authors: Sydney Burt and Levi Hammond
+    ///     Date: April 22, 2025
     /// </summary>
     public static class WebServer
     {
+        /// <summary>
+        ///     Creates a good HTTP header for when the server is found, the request is valid, and the database is connected. 
+        /// </summary>
         private const string httpOkHeader = "HTTP/1.1 200 OK\r\n" +
             "Connection: close\r\n" +
             "Content-Type: text/html; charset=UTF-8\r\n" +
             "Content-Length: 89\r\n" + 
             "\r\n";
 
+        /// <summary>
+        ///     Creates a bad HTTP header for when the server isn't found, the request isn't valid, or the database isn't connected.
+        /// </summary>
         private const string httpBadHeader = "HTTP/1.1 404 Not Found\r\n" +
             "Connection: close\r\n" +
             "Content-Type: text/html; charset=UTF-8\r\n" +
             "\r\n";
 
+        /// <summary>
+        ///     The main method to start the server with the HandleHttpConnection delegate pass.
+        /// </summary>
+        /// <param name="args">Any string arguments the main method takes.</param>
         public static void Main(string[] args)
         {
-            // start the server with the HandleHttpConnection deligate pass
-
             Server.StartServer(HandleHttpConnection, 80);
-            
             Console.Read();
         }
 
         /// <summary>
-        /// 
-        /// </summary>+		connection	{GUI.Client.Controllers.NetworkConnection}	GUI.Client.Controllers.NetworkConnection
-
-        /// <param name="connection"> Server fills the database. </param>
+        ///     This method handles basic http requests with very basic html reponses. 
+        ///     Handles three different pages/requests: GET /, GET /games, and GET /games?gid=x.
+        ///     GET  displays a basic welcome message and links to the game page.
+        ///     GET /games displays a table with all the games in the database.
+        ///     GET /games?gid=x displays the stats for a specific game with the given game ID.
+        /// </summary>
+        /// <param name="connection"> The network connection taken by the method. </param>
         private static void HandleHttpConnection(NetworkConnection connection)
         {
             Console.WriteLine("new client");
@@ -46,16 +59,16 @@ namespace WebServer
 
             if(request.Contains("GET / "))
             {
-                // serve to the display page
+                //Creates the first display page with the title of the website.
                 string response = httpOkHeader;
                 response += "<html>\r\n" + "<h3>Welcome to the Snake Games Database!</h3>\r\n" + "<a href=\"/games\">View Games</a>\r\n" + "</html>"; // might have to separate into multiple response += strings in case this is wrong. COME BACK!!!
                 Console.WriteLine(response);
                 connection.Send(response);
-                Console.WriteLine(response);
+                Console.WriteLine(response); //Is this necessary?
             }
             else if(request.Contains("GET /games"))
             {
-                // serve to the table of all the games in the database)
+                //Displays a table with all of the game information in the database.
                 string response = httpOkHeader;
 
                 response += "<html>\r\n" + "<table border=\"1\">\r\n" + "<thead>\r\n" + "<tr>\r\n" + "<td>ID</td><td>Start</td><td>End</td>\r\n" + "</tr>\r\n" + "</thead>\r\n" + "<tbody>\r\n";
@@ -80,13 +93,10 @@ namespace WebServer
                 }
                 response += "</tbody>\r\n" + "</table>\r\n" + "</html>\r\n";
                 connection.Send(response);
-                //Disconnects from snake server even when server # is 80.
-                //connection.Disconnect();
             }
             else if(request.Contains("GET /games?gid="))
             {
-
-                // serve to the stats for a specific game of a given gameID "x"
+                //Displays the stats for a specific game of a given gameID "x."
                 string response = httpOkHeader;
 
                 response += "<html>\r\n" + "<h3>\r\n" + "Stats for Game " + "1" + "</h3>\r\n" + "<table border=\"1\">\r\n" +
@@ -116,15 +126,10 @@ namespace WebServer
             }
             else
             {
-                // if the server is not found
+                //If the server is not found, the database is not connected, or the request isn't valid, returns 404 Not Found.
                 string response = httpBadHeader;
                 connection.Send(response);
             }
         }
     }
 }
-
-//< html >
-//  < h3 > Welcome to the Snake Games Database!</h3>
-//  <a href="/games">View Games</a>
-//</html>
