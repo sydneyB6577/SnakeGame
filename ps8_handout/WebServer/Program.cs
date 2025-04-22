@@ -59,7 +59,6 @@ namespace WebServer
                 response += "<html>\r\n" + "<h3>Welcome to the Snake Games Database!</h3>\r\n" + "<a href=\"/games\">View Games</a>\r\n" + "</html>"; // might have to separate into multiple response += strings in case this is wrong. COME BACK!!!
                 Console.WriteLine(response);
                 connection.Send(response);
-                Console.WriteLine(response); //Is this necessary?
             }
             else if (request.Contains("GET /games"))
             {
@@ -79,7 +78,8 @@ namespace WebServer
                         while (reader.Read())
                         {
                             response += "<tr>\r\n";
-                            response += "<td>" + "<a href=\"/games?gid=" + reader["GameID"] + ">" + reader["GameID"] + "</a>" + "</td>\r\n";
+                            Console.WriteLine(reader["GameID"]);
+                            response += "<td>" + "<a href=/games?gid=" + reader["GameID"] + ">" + reader["GameID"] + "</a>" + "</td>\r\n";
                             response += "<td>" + reader["StartTime"] + "</td>\r\n";
                             response += "<td>" + reader["EndTime"] + "</td>\r\n";
                             response += "</tr>\r\n";
@@ -89,19 +89,26 @@ namespace WebServer
                 response += "</tbody>\r\n" + "</table>\r\n" + "</html>\r\n";
                 connection.Send(response);
             }
-            else if (request.Contains("GET /games?gid="))
+            else if (request.Contains("GET /games?gid= "))
             {
+                // substring of request for just the number after gid=
+                // parse that substring into an int
+                // use that int in our SQL stuff
+                int nextWhiteSpace = request.IndexOf(' ', 15);
+                string linkGameID = request.Substring(15, nextWhiteSpace);
+                int currentGameID = 0;
+                int.TryParse(linkGameID, out currentGameID);
                 //Displays the stats for a specific game of a given gameID "x."
                 string response = httpOkHeader;
 
-                response += "<html>\r\n" + "<h3>\r\n" + "Stats for Game " + "1" + "</h3>\r\n" + "<table border=\"1\">\r\n" +
+                response += "<html>\r\n" + "<h3>\r\n" + "Stats for Game " + $"{currentGameID}" + "</h3>\r\n" + "<table border=\"1\">\r\n" +
                     "<thead>\r\n" + "<tr>\r\n" + "<td>Player ID</td><td>Player Name</td><td>Max Score</td><td>Enter Time</td><td>Leave Time</td>\r\n" +
                     "</tr>\r\n" + "<tbody>\r\n";
                 using (MySqlConnection connectionTwo = new MySqlConnection(NetworkController.connectDatabaseString))
                 {
                     connectionTwo.Open();
                     MySqlCommand cmd = connectionTwo.CreateCommand();
-                    cmd.CommandText = "select * from Players";
+                    cmd.CommandText = "SELECT * FROM Players WHERE GameID = " + $"{currentGameID}";
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())

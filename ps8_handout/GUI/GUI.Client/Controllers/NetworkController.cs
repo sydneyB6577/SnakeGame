@@ -68,8 +68,9 @@ namespace GUI.Client.Controllers
                 SQLConnect.Open();
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
-                    cmd.CommandText = "UPDATE Games SET EndTime = " + "\"" +  endTime + "\"" + " WHERE GameID = " + gameID + ";"; //Add a where statement?
-                    cmd.CommandText = "UPDATE Players SET LeaveTime = " + "\"" + endTime + "\"" + " WHERE GameID = " + gameID + ";"; //Add a where statement
+                    cmd.CommandText = "UPDATE Games SET EndTime = " + "\"" + endTime + "\"" + $" WHERE GameID = {gameID};"; //Add a where statement?
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "UPDATE Players SET LeaveTime = " + "\"" + endTime + "\"" + $" WHERE GameID = {gameID};"; //Add a where statement
                     cmd.ExecuteNonQuery();
                 }
             }
