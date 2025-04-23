@@ -49,6 +49,8 @@ namespace WebServer
         private static void HandleHttpConnection(NetworkConnection connection)
         {
             string request = connection.ReadLine();
+            //Very rarely throws an exception due to tcpClient.GetStream unsupported on browser in NetworkConnection.
+            //Issue goes away if program is run a second time.
             if (request.Contains("GET / "))
             {
                 //Creates the first display page with the title of the website.
@@ -57,6 +59,8 @@ namespace WebServer
                 response += welcome;
                 connection.Send(response);
             }
+            //Some games may not have leave times because the browser was closed instead of the user disconnecting. 
+            //Any new games created will have proper leave times.
             else if (request.Contains("GET /games"))
             {
                 //Displays a table with all of the game information in the database.
@@ -84,6 +88,8 @@ namespace WebServer
                 string fullResponse = httpOkHeader + $"{response.Length}\r\n" + "\r\n" + response;
                 connection.Send(fullResponse);
             }
+            //Some player games may not have leave times because the browser was closed instead of the user disconnecting. 
+            //Any new games or players created will have proper leave times.
             else if (request.Contains("GET /players?gid="))
             {
                 //Displays the stats for a specific game of a given gameID "x."

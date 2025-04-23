@@ -141,7 +141,6 @@ namespace GUI.Client.Controllers
             using (MySqlConnection SQLConnect = new MySqlConnection(connectDatabaseString))
             {
                 SQLConnect.Open();
-                
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
                     cmd.CommandText = "INSERT INTO Games(StartTime) VALUES (\"" + startTime + "\");"; // Sets up the query.
@@ -199,10 +198,10 @@ namespace GUI.Client.Controllers
                         //If the current snake identified by the server is not in the list, add their information to the players list.
                         if (!IDList.Contains(currentSnake!.snake))
                         {
-                            using(MySqlConnection SQLConnectPlayer = new MySqlConnection(connectDatabaseString))
+                            using(MySqlConnection SQLConnectPlayer1 = new MySqlConnection(connectDatabaseString))
                             {
-                                SQLConnectPlayer.Open();
-                                using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
+                                SQLConnectPlayer1.Open();
+                                using (MySqlCommand command = SQLConnectPlayer1.CreateCommand())
                                 {
                                     //Makes a new row in the players table with the new snake's id, name, entry time, and gameID
                                     command.CommandText = "INSERT INTO Players (PlayerID, PlayerName, EnterTime, GameID) VALUES (" + currentSnake.snake + "," + "\"" + currentSnake.name + "\"" + "," + "\"" + startTime + "\"" + "," + gameID + ");";
@@ -215,19 +214,19 @@ namespace GUI.Client.Controllers
                         if(IDList.Contains(currentSnake!.snake))
                         {
                             if(currentSnake.score > currentSnake.maxScore)
-                                currentSnake.maxScore = currentSnake.score;
-                            
-                            using (MySqlConnection SQLConnectPlayer = new MySqlConnection(connectDatabaseString))
                             {
-                                SQLConnectPlayer.Open();
-                                using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
+                                currentSnake.maxScore = currentSnake.score;
+                                using (MySqlConnection SQLConnectPlayer2 = new MySqlConnection(connectDatabaseString))
                                 {
-                                    //Updates a previously seen snake's max score only
-                                    command.CommandText = "UPDATE Players SET PlayerMaxScore = " + "\"" + currentSnake.maxScore + "\"" + $" WHERE GameID = {gameID};";
-                                    command.ExecuteNonQuery();
+                                    SQLConnectPlayer2.Open();
+                                    using (MySqlCommand command = SQLConnectPlayer2.CreateCommand())
+                                    {
+                                        //Updates a previously seen snake's max score only
+                                        command.CommandText = "UPDATE Players SET PlayerMaxScore = " + currentSnake.maxScore + $" WHERE PlayerID = {currentSnake.snake};";
+                                        command.ExecuteNonQuery();
+                                    }
                                 }
                             }
-                            IDList.Add(currentSnake!.snake);
                         }
                         world.snakes[currentSnake!.snake] = currentSnake;
                     }

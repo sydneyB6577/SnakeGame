@@ -39,11 +39,6 @@ public sealed class NetworkConnection : IDisposable
     private StreamWriter? _writer = null;
 
     /// <summary>
-    ///     Length of the http header.
-    /// </summary>
-    public static int contentLength = 0;
-
-    /// <summary>
     ///   Initializes a new instance of the <see cref="NetworkConnection"/> class.
     ///   <para>
     ///     Create a network connection object.
@@ -60,7 +55,6 @@ public sealed class NetworkConnection : IDisposable
             // Only establish the reader/writer if the provided TcpClient is already connected.
             _reader = new StreamReader(_tcpClient.GetStream(), new UTF8Encoding(false));
             _writer = new StreamWriter(_tcpClient.GetStream(), new UTF8Encoding(false)) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
-            contentLength = _reader.ToString()!.Length;
         }
     }
 
@@ -93,7 +87,7 @@ public sealed class NetworkConnection : IDisposable
         try
         {
             _tcpClient = new TcpClient();
-            _tcpClient.Connect(host, port); // error here
+            _tcpClient.Connect(host, port);
             _reader = new StreamReader(_tcpClient.GetStream(), new UTF8Encoding(false));
             _writer = new StreamWriter(_tcpClient.GetStream(), new UTF8Encoding(false)) { AutoFlush = true }; // AutoFlush ensures data is sent immediately
         }
