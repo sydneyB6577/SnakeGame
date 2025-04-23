@@ -14,10 +14,12 @@ namespace WebServer
         /// <summary>
         ///     Creates a good HTTP header for when the server is found, the request is valid, and the database is connected. 
         /// </summary>
+        /// Change contentLength 
         private const string httpOkHeader = "HTTP/1.1 200 OK\r\n" +
             "Connection: close\r\n" +
             "Content-Type: text/html; charset=UTF-8\r\n" +
-            "Content-Length: {NetworkConnection.contentLength} ";
+            "Content-Length: {NetworkConnection.contentLength} \r\n" +
+            "\r\n";
 
         /// <summary>
         ///     Creates a bad HTTP header for when the server isn't found, the request isn't valid, or the database isn't connected.
@@ -26,6 +28,9 @@ namespace WebServer
             "Connection: close\r\n" +
             "Content-Type: text/html; charset=UTF-8\r\n" +
             "\r\n";
+
+        //
+        private static string gid = string.Empty;
 
         /// <summary>
         ///     The main method to start the server with the HandleHttpConnection delegate pass.
@@ -71,11 +76,11 @@ namespace WebServer
                         while (reader.Read())
                         {
                             response += "<tr>\r\n";
-                            //Hyperlink isn't working because of syntax issues?
                             response += "<td>" + "<a href=/players?gid=" +  reader["GameID"] + ">" + reader["GameID"] + "</a>" + "</td>\r\n";
                             response += "<td>" + reader["StartTime"] + "</td>\r\n";
                             response += "<td>" + reader["EndTime"] + "</td>\r\n";
                             response += "</tr>\r\n";
+                            //gid = reader["GameID"].ToString()!;
                         }
                     }
                 }
@@ -95,7 +100,7 @@ namespace WebServer
                 //response += $"{response.Length}\r\n" + "\r\n";
 
                 //replace 1 with url
-                response += "<html>\r\n" + "<h3>\r\n" + "Stats for Game " + "50" + "</h3>\r\n" + "<table border=\"1\">\r\n" +
+                response += "<html>\r\n" + "<h3>\r\n" + "Stats for Game " + gid + "</h3>\r\n" + "<table border=\"1\">\r\n" +
                     "<thead>\r\n" + "<tr>\r\n" + "<td>Player ID</td><td>Player Name</td><td>Max Score</td><td>Enter Time</td><td>Leave Time</td>\r\n" +
                     "</tr>\r\n" + "<tbody>\r\n";
                 using (MySqlConnection connectionTwo = new MySqlConnection(NetworkController.connectDatabaseString))
