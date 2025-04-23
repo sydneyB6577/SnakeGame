@@ -18,8 +18,7 @@ namespace WebServer
         private const string httpOkHeader = "HTTP/1.1 200 OK\r\n" +
             "Connection: close\r\n" +
             "Content-Type: text/html; charset=UTF-8\r\n" +
-            "Content-Length: {NetworkConnection.contentLength} \r\n" +
-            "\r\n";
+            "Content-Length: ";
 
         /// <summary>
         ///     Creates a bad HTTP header for when the server isn't found, the request isn't valid, or the database isn't connected.
@@ -28,9 +27,6 @@ namespace WebServer
             "Connection: close\r\n" +
             "Content-Type: text/html; charset=UTF-8\r\n" +
             "\r\n";
-
-        //
-        private static string gid = string.Empty;
 
         /// <summary>
         ///     The main method to start the server with the HandleHttpConnection delegate pass.
@@ -56,15 +52,16 @@ namespace WebServer
             if (request.Contains("GET / "))
             {
                 //Creates the first display page with the title of the website.
-                string response = httpOkHeader;
-                response += "<html>\r\n" + "<h3>Welcome to the Snake Games Database!</h3>\r\n" + "<a href=\"/games\">View Games</a>\r\n" + "</html>"; // might have to separate into multiple response += strings in case this is wrong. 
+                string welcome = "<html>\r\n" + "<h3>Welcome to the Snake Games Database!</h3>\r\n" + "<a href=\"/games\">View Games</a>\r\n" + "</html>"; 
+                string response = httpOkHeader + $"{welcome.Length}\r\n" + "\r\n";
+                response += welcome;
                 connection.Send(response);
             }
             else if (request.Contains("GET /games"))
             {
                 //Displays a table with all of the game information in the database.
-                string response = httpOkHeader;
-                response += "<html>\r\n" + "<table border=\"1\">\r\n" + "<thead>\r\n" + "<tr>\r\n" + "<td>ID</td><td>Start</td><td>End</td>\r\n" + "</tr>\r\n" + "</thead>\r\n" + "<tbody>\r\n";
+                string tableString = "<html>\r\n" + "<table border=\"1\">\r\n" + "<thead>\r\n" + "<tr>\r\n" + "<td>ID</td><td>Start</td><td>End</td>\r\n" + "</tr>\r\n" + "</thead>\r\n" + "<tbody>\r\n";
+                string response = tableString;
                 using (MySqlConnection connectionOne = new MySqlConnection(NetworkController.connectDatabaseString))
                 {
                     connectionOne.Open();
@@ -76,38 +73,34 @@ namespace WebServer
                         while (reader.Read())
                         {
                             response += "<tr>\r\n";
-                            response += "<td>" + "<a href=/players?gid=" +  reader["GameID"] + ">" + reader["GameID"] + "</a>" + "</td>\r\n";
+                            response += "<td>" + "<a href=/players?gid=" + reader["GameID"] + ">" + reader["GameID"] + "</a>" + "</td>\r\n";
                             response += "<td>" + reader["StartTime"] + "</td>\r\n";
                             response += "<td>" + reader["EndTime"] + "</td>\r\n";
                             response += "</tr>\r\n";
-                            //gid = reader["GameID"].ToString()!;
                         }
                     }
                 }
                 response += "</tbody>\r\n" + "</table>\r\n" + "</html>\r\n";
-                connection.Send(response);
+                string fullResponse = httpOkHeader + $"{response.Length}\r\n" + "\r\n" + response;
+                connection.Send(fullResponse);
             }
             else if (request.Contains("GET /players?gid="))
             {
-                //int nextWhiteSpace = request.IndexOf(' ', 16);
-                //Not working
-                //string linkGameID = request.Substring(16, nextWhiteSpace);
-                //int currentGameID = 0;
-                //int.TryParse(linkGameID, out currentGameID);
-
                 //Displays the stats for a specific game of a given gameID "x."
-                string response = httpOkHeader;
-                //response += $"{response.Length}\r\n" + "\r\n";
+                int startingIndex = request.IndexOf("?gid=") + "?gid=".Length;
+                int nextWhiteSpace = request.IndexOf(' ', startingIndex);
+                string linkGameId = request.Substring(startingIndex, nextWhiteSpace - startingIndex);
+                int currentGameID = 0;
+                int.TryParse(linkGameId, out currentGameID);
 
-                //replace 1 with url
-                response += "<html>\r\n" + "<h3>\r\n" + "Stats for Game " + gid + "</h3>\r\n" + "<table border=\"1\">\r\n" +
+                string response = "<html>\r\n" + "<h3>\r\n" + "Stats for Game " + currentGameID + "</h3>\r\n" + "<table border=\"1\">\r\n" +
                     "<thead>\r\n" + "<tr>\r\n" + "<td>Player ID</td><td>Player Name</td><td>Max Score</td><td>Enter Time</td><td>Leave Time</td>\r\n" +
                     "</tr>\r\n" + "<tbody>\r\n";
                 using (MySqlConnection connectionTwo = new MySqlConnection(NetworkController.connectDatabaseString))
                 {
                     connectionTwo.Open();
                     MySqlCommand cmd = connectionTwo.CreateCommand();
-                    cmd.CommandText = "SELECT * FROM Players"; // WHERE GameID = " + $"{currentGameID}";
+                    cmd.CommandText = "SELECT * FROM Players WHERE GameID = " + $"{currentGameID}";
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -123,7 +116,8 @@ namespace WebServer
                     }
                 }
                 response += "</tbody>\r\n" + "</table>\r\n" + "</html>\r\n";
-                connection.Send(response);
+                string fullResponse = httpOkHeader + $"{response.Length}\r\n" + "\r\n" + response;
+                connection.Send(fullResponse);
             }
             else
             {
