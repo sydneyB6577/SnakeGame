@@ -17,8 +17,7 @@ namespace WebServer
         private const string httpOkHeader = "HTTP/1.1 200 OK\r\n" +
             "Connection: close\r\n" +
             "Content-Type: text/html; charset=UTF-8\r\n" +
-            "Content-Length: {NetworkConnection.contentLength} \r\n" +
-            "\r\n";
+            "Content-Length: ";
 
         /// <summary>
         ///     Creates a bad HTTP header for when the server isn't found, the request isn't valid, or the database isn't connected.
@@ -93,6 +92,7 @@ namespace WebServer
 
                 //Displays the stats for a specific game of a given gameID "x."
                 string response = httpOkHeader;
+                response += $"{response.Length}\r\n" + "\r\n";
 
                 //replace 1 with url
                 response += "<html>\r\n" + "<h3>\r\n" + "Stats for Game " + "50" + "</h3>\r\n" + "<table border=\"1\">\r\n" +
