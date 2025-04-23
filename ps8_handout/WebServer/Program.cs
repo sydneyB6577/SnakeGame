@@ -17,8 +17,7 @@ namespace WebServer
         private const string httpOkHeader = "HTTP/1.1 200 OK\r\n" +
             "Connection: close\r\n" +
             "Content-Type: text/html; charset=UTF-8\r\n" +
-            "Content-Length: {NetworkConnection.contentLength} \r\n" +
-            "\r\n";
+            "Content-Length: ";
 
         /// <summary>
         ///     Creates a bad HTTP header for when the server isn't found, the request isn't valid, or the database isn't connected.
@@ -56,6 +55,7 @@ namespace WebServer
             {
                 //Creates the first display page with the title of the website.
                 string response = httpOkHeader;
+                response += $"{response.Length}\r\n" + "\r\n";
                 response += "<html>\r\n" + "<h3>Welcome to the Snake Games Database!</h3>\r\n" + "<a href=\"/games\">View Games</a>\r\n" + "</html>"; // might have to separate into multiple response += strings in case this is wrong. COME BACK!!!
                 Console.WriteLine(response);
                 connection.Send(response);
@@ -64,7 +64,8 @@ namespace WebServer
             {
                 //Displays a table with all of the game information in the database.
                 string response = httpOkHeader;
-
+                string responseString = "<html>\r\n" + "<table border=\"1\">\r\n" + "<thead>\r\n" + "<tr>\r\n" + "<td>ID</td><td>Start</td><td>End</td>\r\n" + "</tr>\r\n" + "</thead>\r\n" + "<tbody>\r\n";
+                response += $"{responseString.Length}\r\n" + "\r\n";
                 response += "<html>\r\n" + "<table border=\"1\">\r\n" + "<thead>\r\n" + "<tr>\r\n" + "<td>ID</td><td>Start</td><td>End</td>\r\n" + "</tr>\r\n" + "</thead>\r\n" + "<tbody>\r\n";
 
                 using (MySqlConnection connectionOne = new MySqlConnection(NetworkController.connectDatabaseString))
@@ -89,8 +90,9 @@ namespace WebServer
                 response += "</tbody>\r\n" + "</table>\r\n" + "</html>\r\n";
                 connection.Send(response);
             }
-            else if (request.Contains("GET /games?gid= "))
+            else if (request.Contains("GET /games?gid="))
             {
+                Console.WriteLine(request);
                 // substring of request for just the number after gid=
                 // parse that substring into an int
                 // use that int in our SQL stuff
@@ -100,6 +102,7 @@ namespace WebServer
                 int.TryParse(linkGameID, out currentGameID);
                 //Displays the stats for a specific game of a given gameID "x."
                 string response = httpOkHeader;
+                response += $"{response.Length}\r\n" + "\r\n";
 
                 response += "<html>\r\n" + "<h3>\r\n" + "Stats for Game " + $"{currentGameID}" + "</h3>\r\n" + "<table border=\"1\">\r\n" +
                     "<thead>\r\n" + "<tr>\r\n" + "<td>Player ID</td><td>Player Name</td><td>Max Score</td><td>Enter Time</td><td>Leave Time</td>\r\n" +
