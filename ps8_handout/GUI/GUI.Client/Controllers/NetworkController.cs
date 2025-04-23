@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Xml.Linq;
 using GUI.Client.Models;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.Cms;
 using Org.BouncyCastle.Security;
 
 namespace GUI.Client.Controllers
@@ -68,8 +69,9 @@ namespace GUI.Client.Controllers
                 SQLConnect.Open();
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
-                    cmd.CommandText = "UPDATE Games SET EndTime = " + "\"" +  endTime + "\"" + " WHERE GameID = " + gameID + ";"; //Add a where statement?
-                    cmd.CommandText = "UPDATE Players SET LeaveTime = " + "\"" + endTime + "\"" + " WHERE GameID = " + gameID + ";"; //Add a where statement
+                    cmd.CommandText = "UPDATE Games SET EndTime = " + "\"" +  endTime + "\"" + $" WHERE GameID = {gameID};"; //Add a where statement. Condition is never true.
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "UPDATE Players SET LeaveTime = " + "\"" + endTime + "\"" + $" WHERE GameID = {gameID};"; //Add a where statement
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -142,7 +144,7 @@ namespace GUI.Client.Controllers
                 
                 using (MySqlCommand cmd = SQLConnect.CreateCommand())
                 {
-                    cmd.CommandText = "INSERT INTO Games(StartTime) VALUES (\"" + startTime + "\");"; // Set's up the query.
+                    cmd.CommandText = "INSERT INTO Games(StartTime) VALUES (\"" + startTime + "\");"; // Sets up the query.
                     cmd.ExecuteNonQuery();
                 }
                
@@ -221,7 +223,7 @@ namespace GUI.Client.Controllers
                                 using (MySqlCommand command = SQLConnectPlayer.CreateCommand())
                                 {
                                     //Updates a previously seen snake's max score only
-                                    command.CommandText = "UPDATE Players SET PlayerMaxScore = " + currentSnake.maxScore + " WHERE GameID = " + gameID + ";";
+                                    command.CommandText = "UPDATE Players SET PlayerMaxScore = " + "\"" + currentSnake.maxScore + "\"" + $" WHERE GameID = {gameID};";
                                     command.ExecuteNonQuery();
                                 }
                             }

@@ -48,26 +48,19 @@ namespace WebServer
         /// <param name="connection"> The network connection taken by the method. </param>
         private static void HandleHttpConnection(NetworkConnection connection)
         {
-            Console.WriteLine("new client");
             string request = connection.ReadLine();
-            Console.WriteLine(request);
-
             if (request.Contains("GET / "))
             {
                 //Creates the first display page with the title of the website.
                 string response = httpOkHeader;
-                response += "<html>\r\n" + "<h3>Welcome to the Snake Games Database!</h3>\r\n" + "<a href=\"/games\">View Games</a>\r\n" + "</html>"; // might have to separate into multiple response += strings in case this is wrong. COME BACK!!!
-                Console.WriteLine(response);
+                response += "<html>\r\n" + "<h3>Welcome to the Snake Games Database!</h3>\r\n" + "<a href=\"/games\">View Games</a>\r\n" + "</html>"; // might have to separate into multiple response += strings in case this is wrong. 
                 connection.Send(response);
-                Console.WriteLine(response); //Is this necessary?
             }
             else if (request.Contains("GET /games"))
             {
                 //Displays a table with all of the game information in the database.
                 string response = httpOkHeader;
-
                 response += "<html>\r\n" + "<table border=\"1\">\r\n" + "<thead>\r\n" + "<tr>\r\n" + "<td>ID</td><td>Start</td><td>End</td>\r\n" + "</tr>\r\n" + "</thead>\r\n" + "<tbody>\r\n";
-
                 using (MySqlConnection connectionOne = new MySqlConnection(NetworkController.connectDatabaseString))
                 {
                     connectionOne.Open();
@@ -79,7 +72,8 @@ namespace WebServer
                         while (reader.Read())
                         {
                             response += "<tr>\r\n";
-                            response += "<td>" + "<a href=\"/games?gid=" + reader["GameID"] + ">" + reader["GameID"] + "</a>" + "</td>\r\n";
+                            //Hyperlink isn't working because of syntax issues?
+                            response += "<td>" + "<a href=/players?gid=" +  reader["GameID"] + ">" + reader["GameID"] + "</a>" + "</td>\r\n";
                             response += "<td>" + reader["StartTime"] + "</td>\r\n";
                             response += "<td>" + reader["EndTime"] + "</td>\r\n";
                             response += "</tr>\r\n";
@@ -89,19 +83,26 @@ namespace WebServer
                 response += "</tbody>\r\n" + "</table>\r\n" + "</html>\r\n";
                 connection.Send(response);
             }
-            else if (request.Contains("GET /games?gid="))
+            else if (request.Contains("GET /players?gid="))
             {
+                //int nextWhiteSpace = request.IndexOf(' ', 16);
+                //Not working
+                //string linkGameID = request.Substring(16, nextWhiteSpace);
+                //int currentGameID = 0;
+                //int.TryParse(linkGameID, out currentGameID);
+
                 //Displays the stats for a specific game of a given gameID "x."
                 string response = httpOkHeader;
 
-                response += "<html>\r\n" + "<h3>\r\n" + "Stats for Game " + "1" + "</h3>\r\n" + "<table border=\"1\">\r\n" +
+                //replace 1 with url
+                response += "<html>\r\n" + "<h3>\r\n" + "Stats for Game " + "50" + "</h3>\r\n" + "<table border=\"1\">\r\n" +
                     "<thead>\r\n" + "<tr>\r\n" + "<td>Player ID</td><td>Player Name</td><td>Max Score</td><td>Enter Time</td><td>Leave Time</td>\r\n" +
                     "</tr>\r\n" + "<tbody>\r\n";
                 using (MySqlConnection connectionTwo = new MySqlConnection(NetworkController.connectDatabaseString))
                 {
                     connectionTwo.Open();
                     MySqlCommand cmd = connectionTwo.CreateCommand();
-                    cmd.CommandText = "select * from Players";
+                    cmd.CommandText = "SELECT * FROM Players"; // WHERE GameID = " + $"{currentGameID}";
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -109,7 +110,7 @@ namespace WebServer
                             response += "<tr>";
                             response += "<td>" + reader["PlayerID"] + "</td>\r\n";
                             response += "<td>" + reader["PlayerName"] + "</td>\r\n";
-                            response += "<td>" + reader["MaxScore"] + "</td>\r\n";
+                            response += "<td>" + reader["PlayerMaxScore"] + "</td>\r\n";
                             response += "<td>" + reader["EnterTime"] + "</td>\r\n";
                             response += "<td>" + reader["LeaveTime"] + "</td>\r\n";
                             response += "</tr>\r\n";
