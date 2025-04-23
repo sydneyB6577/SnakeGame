@@ -145,6 +145,7 @@ public sealed class NetworkConnection : IDisposable
         {
             throw new InvalidOperationException();
         }
+        //This throws an error about half the time.
         return _reader.ReadLine() ?? throw new Exception(); // Reads the message from the other side of the connection.
     }
 
