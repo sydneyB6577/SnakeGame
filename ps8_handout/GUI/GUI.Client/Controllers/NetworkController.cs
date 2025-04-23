@@ -201,6 +201,7 @@ namespace GUI.Client.Controllers
                             using(MySqlConnection SQLConnectPlayer1 = new MySqlConnection(connectDatabaseString))
                             {
                                 SQLConnectPlayer1.Open();
+                                startTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                                 using (MySqlCommand command = SQLConnectPlayer1.CreateCommand())
                                 {
                                     //Makes a new row in the players table with the new snake's id, name, entry time, and gameID
